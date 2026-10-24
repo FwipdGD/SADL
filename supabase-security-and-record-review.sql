@@ -12,7 +12,7 @@ create table if not exists public.level_runs (
   id uuid primary key default gen_random_uuid(),
   player_id uuid not null references public.players(id) on delete cascade,
   level_id uuid not null references public.levels(id) on delete cascade,
-  percent integer not null check (percent between 1 and 99),
+  percent integer not null check (percent between 50 and 99),
   proof_url text not null check (length(btrim(proof_url)) > 0),
   achieved_on date,
   created_at timestamptz not null default now()
@@ -30,7 +30,7 @@ create table if not exists public.record_submissions (
   created_at timestamptz not null default now(),
   constraint record_submission_percent_valid check (
     (submission_type = 'completion' and percent is null)
-    or (submission_type = 'percent' and percent between 1 and 99)
+    or (submission_type = 'percent' and percent between 50 and 99)
   )
 );
 
@@ -98,7 +98,7 @@ create policy "Anyone can submit records for review" on public.record_submission
     and length(btrim(proof_url)) > 0
     and (
       (submission_type = 'completion' and percent is null)
-      or (submission_type = 'percent' and percent between 1 and 99)
+      or (submission_type = 'percent' and percent between 50 and 99)
     )
   );
 create policy "FWIPGD can view submissions" on public.record_submissions
