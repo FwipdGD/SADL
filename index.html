@@ -1,127 +1,70 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SADL — Social Amateur Demon List</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d0e13">
+<title>SA Demonlist</title>
 <style>
-:root{--bg:#0d0f14;--panel:#151922;--panel2:#1b202b;--line:#2a3140;--text:#f1f4fa;--muted:#9ca7ba;--accent:#df3549;--accent2:#ff596b;--green:#48d597}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#33202a 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-a{color:#ff8794}button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:9px 12px}button:hover{border-color:var(--accent2)}button.primary{background:var(--accent);border-color:var(--accent);font-weight:700}button.danger{color:#ff9aa5}
-.wrap{max-width:1100px;margin:auto;padding:0 20px}.top{border-bottom:1px solid var(--line);background:#0d0f14dd;position:sticky;top:0;backdrop-filter:blur(12px);z-index:3}.nav{display:flex;align-items:center;gap:20px;min-height:68px}.logo{font-weight:950;letter-spacing:2px;font-size:24px}.logo span{color:var(--accent2)}.navlinks{display:flex;gap:16px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none;color:inherit}.navlinks a:hover{color:white}.push{margin-left:auto}
-.hero{padding:44px 0 26px}.eyebrow{color:var(--accent2);font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:11px}.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:10px 0}.hero p{color:var(--muted);max-width:650px;margin:12px 0 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.stat,.panel{background:linear-gradient(140deg,var(--panel),#12151c);border:1px solid var(--line);border-radius:14px}.stat{padding:15px}.stat b{font-size:25px;display:block}.stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
-.panel{overflow:hidden}.sectionhead{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap}.sectionhead h2{font-size:16px;margin:0}.sectionhead small{color:var(--muted)}.tools{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}.tools input{min-width:190px}
-input,select,textarea{background:#0e1118;border:1px solid var(--line);color:var(--text);padding:10px 11px;border-radius:9px;max-width:100%}input:focus,select:focus,textarea:focus{outline:1px solid var(--accent2);border-color:var(--accent2)}
-.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:700px}th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;background:#11141b;padding:12px 15px}td{padding:13px 15px;border-top:1px solid #252b37}tbody tr:hover{background:#1b202b}td.rank{font-weight:900;color:var(--muted);width:60px}.rank.toprank{color:var(--accent2)}.level{font-weight:750}.sub{display:block;font-size:12px;color:var(--muted);font-weight:400}.pill{display:inline-flex;border:1px solid #5a303a;background:#2b1920;color:#ff9aa5;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:800}.empty{text-align:center;color:var(--muted);padding:30px}
-.lower{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 36px}.boxpad{padding:17px}.boxpad h3{margin:0 0 8px;font-size:15px}.boxpad p{color:var(--muted);font-size:13px;margin:0 0 12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:5px}.formgrid .full{grid-column:1/-1}.formgrid input,.formgrid select{width:100%}.rowbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.status{font-size:12px;color:var(--muted);margin-top:10px}.status.good{color:var(--green)}.status.bad{color:#ff9aa5}.foot{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding:22px 0 34px}.hidden{display:none!important}
-@media(max-width:700px){.nav{gap:12px}.navlinks{display:none}.hero{padding-top:30px}.stats{gap:8px}.stat{padding:11px}.stat b{font-size:21px}.lower{grid-template-columns:1fr}.sectionhead{align-items:flex-start}.tools{margin-left:0;width:100%}.tools input{flex:1;min-width:0}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
+:root{--bg:#0d0e13;--panel:#151720;--line:#2b2e3d;--text:#f5f6fb;--muted:#a4a9ba;--red:#e43b52;--gold:#f4cb69;--green:#4cdda1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -18%,#38202b 0,transparent 43%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#ff9aa8}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#1c1e29;color:var(--text);border-radius:9px;padding:9px 12px}button:hover{border-color:#ff6679}.primary{background:var(--red);border-color:var(--red);font-weight:800}button:disabled{opacity:.45;cursor:not-allowed}header{position:sticky;top:0;z-index:5;background:#0d0e13ed;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.wrap{max-width:1150px;margin:auto;padding:0 18px}.nav{min-height:66px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}.logo{font-size:21px;font-weight:1000;letter-spacing:1.5px}.logo em,h1 span{font-style:normal;color:#ff6679}nav{display:flex;gap:15px}nav a{color:var(--muted);font-size:12px;text-decoration:none;font-weight:800}.spacer{flex:1}.hero{padding:38px 0 18px}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ff6679;font-weight:900}h1{font-size:clamp(36px,6vw,60px);line-height:1.02;letter-spacing:-1.5px;margin:8px 0 12px}.muted{color:var(--muted);font-size:12px}.intro{max-width:680px;color:var(--muted);margin:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.stat,.panel{border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,var(--panel),#12131a)}.stat{padding:14px}.stat b{font-size:25px;display:block}.stat span{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}.section{margin:15px 0}.sectionhead{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap}.sectionhead h2{margin:0;font-size:16px}.sectionhead small{display:block;color:var(--muted);font-size:12px}.tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}.tools input{min-width:200px}input,select{width:100%;min-width:0;background:#0e0f15;color:var(--text);border:1px solid var(--line);padding:9px 10px;border-radius:8px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:720px}th{background:#111219;text-align:left;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:11px 13px}td{padding:11px 13px;border-top:1px solid #252735;vertical-align:middle}tbody tr:hover{background:#1b1d27}.rank{font-weight:1000;color:var(--muted)}.toprank{color:var(--gold)}.levelcell{display:flex;align-items:center;gap:10px;min-width:190px}.thumb{width:94px;height:53px;object-fit:cover;border-radius:6px;background:#282a36;border:1px solid var(--line);flex-shrink:0}.placeholder{display:grid;place-items:center;color:var(--muted);font-size:9px;text-align:center}.levelname,.playername{font-weight:850}.sub{display:block;color:var(--muted);font-size:11px}.pill{display:inline-block;padding:4px 7px;border-radius:6px;border:1px solid #55303a;background:#2a1920;color:#ffb0ba;font-size:10px;font-weight:900;white-space:nowrap}.points{font-weight:900;color:var(--gold)}.empty{padding:22px;text-align:center;color:var(--muted)}.lower{display:grid;grid-template-columns:1fr 1fr;gap:14px}.boxpad{padding:16px}.boxpad h3{margin:0 0 8px;font-size:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid label{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:12px}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.status{font-size:12px;color:var(--muted);margin-top:9px;white-space:pre-wrap}.good{color:var(--green)}.bad{color:#ff9aa8}.hidden{display:none!important}.rankinput{width:65px;padding:6px}.btnrow{display:flex;gap:5px}.record{padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}.record:last-child{border:0}.grow{flex:1}.auth{display:flex;gap:7px}.auth input{width:175px}.foot{border-top:1px solid var(--line);margin-top:28px;padding:20px 0 32px;color:var(--muted);font-size:12px}
+@media(max-width:700px){.nav{gap:10px;padding:10px 0}.logo{font-size:18px}nav{order:3;width:100%;gap:13px}.auth{margin-left:auto}.auth input{width:125px}.hero{padding-top:25px}.stat{padding:10px}.stat b{font-size:21px}.lower{grid-template-columns:1fr}.tools{margin:0;width:100%}.tools input{flex:1;min-width:0}.grid{grid-template-columns:1fr}.full{grid-column:auto}.thumb{width:72px;height:41px}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header class="top"><div class="wrap nav">
-  <div class="logo">S<span>A</span>DL</div>
-  <nav class="navlinks"><a href="#list">Demonlist</a><a href="#records">Records</a><a href="#about">Rules</a></nav>
-  <div class="push"><span id="connection" class="pill">LOCAL PREVIEW</span></div>
-</div></header>
+<header><div class="wrap nav"><div class="logo">SA <em>DEMONLIST</em></div><nav><a href="#list">DEMONLIST</a><a href="#players">PLAYERS</a><a href="#records">RECORDS</a><a href="#manage">EDIT LIST</a></nav><div class="spacer"></div><div class="auth"><input id="email" type="email" placeholder="Member email" aria-label="Member email"><button id="signin" class="primary">Sign in</button><button id="signout" class="hidden">Sign out</button></div></div></header>
 <main class="wrap">
-<section class="hero">
-  <div class="eyebrow">Community-ranked • Unofficial</div>
-  <h1>Social Amateur<br><span style="color:var(--accent2)">Demon List.</span></h1>
-  <p>SADL ranks the hardest Geometry Dash levels beaten by the crew. Submit completions, link your proof, and keep the list honest. Community project — not affiliated with Pointercrate or RobTop.</p>
-  <div class="stats">
-    <div class="stat"><b id="levelCount">0</b><span>Ranked levels</span></div>
-    <div class="stat"><b id="recordCount">0</b><span>Verified records</span></div>
-    <div class="stat"><b id="playerCount">0</b><span>Players represented</span></div>
-  </div>
-</section>
-<section class="panel" id="list">
-  <div class="sectionhead"><div><h2>01 / Main List</h2><small>Ranked hardest to easiest</small></div><div class="tools"><input id="search" placeholder="Search level or player…" aria-label="Search"><select id="filter"><option value="all">All difficulties</option><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></div></div>
-  <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Level</th><th>Difficulty</th><th>Top player / record</th><th>Proof</th><th></th></tr></thead><tbody id="levels"></tbody></table></div>
-  <div id="empty" class="empty hidden">No levels match. Add one below, or change your search.</div>
-</section>
-<div class="lower">
-<section class="panel" id="records"><div class="sectionhead"><h2>02 / Add or update a level</h2></div><div class="boxpad">
-<p>Preview mode saves data in this browser only. Connect Supabase (instructions in README) for everyone to share the same live list.</p>
-<form id="levelForm">
-<div class="formgrid">
-<label>Level name<input id="levelName" required maxlength="100" placeholder="Bloodbath"></label>
-<label>Creator<input id="creator" maxlength="100" placeholder="Riot"></label>
-<label>Difficulty<select id="difficulty"><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></label>
-<label>Top player<input id="player" required maxlength="60" placeholder="Your username"></label>
-<label>Progress / completion<input id="progress" maxlength="30" placeholder="100%"></label>
-<label>Proof link (optional)<input id="proof" type="url" placeholder="https://youtu.be/…"></label>
-<label class="full">Notes (optional)<input id="notes" maxlength="240" placeholder="Completion date, extra context…"></label>
-</div>
-<div class="rowbuttons"><button class="primary" type="submit">Add level</button><button type="button" id="cancelEdit" class="hidden">Cancel edit</button></div>
-<div id="formStatus" class="status" role="status"></div>
-</form></div></section>
-<section class="panel"><div class="sectionhead"><h2>03 / Back up & share data</h2></div><div class="boxpad">
-<p>Use export/import to keep a backup while trying the design. These files do not sync between devices; live shared editing needs the database setup.</p>
-<div class="rowbuttons"><button id="export">Export JSON backup</button><label style="display:inline-flex;align-items:center;gap:8px"><input id="importFile" type="file" accept=".json,application/json" style="max-width:180px;padding:7px"></label><button id="import">Import backup</button></div>
-<div class="status" id="backupStatus"></div>
-<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
-<h3>List standards</h3>
-<p>Agree the ranking as a group. Require credible completion proof, be clear about platform/mod rules, and resolve disputes before changing a rank. Only add real completions to the public list.</p>
-</div></section>
-</div>
-<section class="panel" id="about"><div class="sectionhead"><h2>04 / Rules & integrity</h2></div><div class="boxpad">
-<p><b>Unofficial community list.</b> SADL is a friends-only ranking project, not an official Geometry Dash leaderboard.</p>
-<p><b>Suggested rule:</b> a level is ranked only after at least one member has beaten it and shared proof. Rank by the group's agreed difficulty order, not just by the game's difficulty label. Keep progress records separate from completed levels.</p>
-<p><b>Editing:</b> in local preview, edits affect this browser only. Once connected to a shared database, use member sign-ins and database permissions rather than putting a shared password or secret key in the website.</p>
-</div></section>
-<footer class="foot">SADL • Community project • Not affiliated with RobTop Games or Pointercrate.</footer>
-</main>
+<section class="hero"><div class="eyebrow">Unofficial community rankings • Geometry Dash</div><h1>SA <span>Demonlist.</span></h1><p class="intro">A community-ranked list of the hardest demons our crew plays. Add records, earn points, and climb the player leaderboard.</p><div class="stats"><div class="stat"><b id="levelCount">0</b><span>Ranked levels</span></div><div class="stat"><b id="completionCount">0</b><span>Completions</span></div><div class="stat"><b id="playerCount">0</b><span>Players</span></div></div><div class="muted" id="connection">Loading…</div></section>
+<section class="panel section" id="list"><div class="sectionhead"><div><h2>01 / Main List</h2><small>Hardest to easiest • points update when ranks change</small></div><div class="tools"><input id="search" placeholder="Search levels, creators, players…"><select id="filter"><option value="all">All difficulties</option><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></div></div><div class="tablewrap"><table><thead><tr><th>Rank</th><th>Level</th><th>Difficulty</th><th>Completions</th><th>Points</th><th>Move / edit</th></tr></thead><tbody id="levels"></tbody></table></div><div id="empty" class="empty hidden">No levels match your search.</div></section>
+<section class="panel section" id="players"><div class="sectionhead"><div><h2>02 / Player Leaderboard</h2><small>More points for higher-ranked demons • each level counts once</small></div></div><div class="tablewrap"><table style="min-width:620px"><thead><tr><th>#</th><th>Player</th><th>Points</th><th>Beaten</th><th>Hardest beaten</th></tr></thead><tbody id="board"></tbody></table></div><div id="boardEmpty" class="empty hidden">Add players and completions to start the leaderboard.</div></section>
+<div class="lower section">
+<section class="panel" id="manage"><div class="sectionhead"><div><h2>03 / List editor</h2><small>Set an exact rank; other levels shift automatically</small></div></div><div class="boxpad"><form id="levelForm"><div class="grid"><label>Level name<input id="name" required maxlength="100" placeholder="Bloodbath"></label><label>Creator<input id="creator" maxlength="100" placeholder="Riot"></label><label>Difficulty<select id="difficulty"><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></label><label>Rank<input id="rank" type="number" min="1" step="1" value="1" required></label><label>Thumbnail URL<input id="thumbnail" type="url" placeholder="https://…"></label><label>Showcase URL<input id="showcase" type="url" placeholder="https://youtu.be/…"></label><label class="full">Notes<input id="notes" maxlength="240" placeholder="Optional"></label></div><div class="actions"><button class="primary" id="saveLevel">Add level</button><button type="button" id="cancelEdit" class="hidden">Cancel edit</button></div><div id="levelStatus" class="status"></div></form><p class="muted">Thumbnail and showcase URLs are optional. Use public image links for thumbnails.</p></div></section>
+<section class="panel" id="records"><div class="sectionhead"><div><h2>04 / Completions & players</h2><small>Submit a record with proof</small></div></div><div class="boxpad"><form id="completionForm"><div class="grid"><label>Player<select id="recordPlayer" required></select></label><label>Level<select id="recordLevel" required></select></label><label class="full">Proof link<input id="proof" type="url" placeholder="https://youtu.be/…"></label><label>Date beaten<input id="date" type="date"></label></div><div class="actions"><button class="primary">Add completion</button></div><div id="recordStatus" class="status"></div></form><hr style="border:0;border-top:1px solid var(--line);margin:17px 0"><h3>Add a player</h3><form id="playerForm"><div class="grid"><label>Display name<input id="playerName" maxlength="50" required placeholder="Player name"></label><label>GD username<input id="gdName" maxlength="50" placeholder="Optional"></label></div><div class="actions"><button>Add player</button></div><div id="playerStatus" class="status"></div></form></div></section></div>
+<section class="panel section"><div class="sectionhead"><h2>05 / Recent records</h2></div><div class="boxpad" id="recent"><div class="muted">No completions yet.</div></div></section>
+<section class="panel section"><div class="sectionhead"><h2>Scoring & rules</h2></div><div class="boxpad muted"><p><b style="color:var(--text)">Points:</b> a unique completion earns <code>1000 ÷ rank</code> points (rounded to one decimal). #1 gives 1000, #5 gives 200, and #10 gives 100. Points recalculate when list ranks change.</p><p><b style="color:var(--text)">Records:</b> one completion per player per level. Add proof links so the group can check records.</p><p><b style="color:var(--text)">Privacy:</b> the public site shows display names and records, not sign-in email addresses. Shared editing requires an approved member account and the database setup.</p><p>This is an unofficial fan project and is not affiliated with Pointercrate or RobTop Games.</p></div></section>
+<footer class="foot">SA Demonlist • Unofficial community project</footer></main>
 <script>
-const STORAGE_KEY = 'sadl-levels-v1';
-const seed = [
- {id:'demo-1',name:'Bloodbath',creator:'Riot',difficulty:'Extreme Demon',player:'Your username',progress:'25% progress',proof:'',notes:'Demo entry — edit or remove this example',demo:true},
- {id:'demo-2',name:'Add your first level',creator:'',difficulty:'Insane Demon',player:'Your friend',progress:'100%',proof:'',notes:'Replace this example with a real completion',demo:true}
-];
-let levels = load();
-let editingId = null;
-const $ = id => document.getElementById(id);
-function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY));return Array.isArray(x)?x:seed.map(v=>({...v}));}catch{return seed.map(v=>({...v}));}}
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(levels));}
-function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function validUrl(s){try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch{return '';}}
-function rankValue(l){return l.difficulty==='Extreme Demon'?0:l.difficulty==='Insane Demon'?1:l.difficulty==='Hard Demon'?2:3;}
+const SUPABASE_URL="PASTE_SUPABASE_PROJECT_URL_HERE",SUPABASE_ANON_KEY="PASTE_SUPABASE_ANON_KEY_HERE";
+const configured=SUPABASE_URL.startsWith("https://")&&!SUPABASE_URL.includes("PASTE_")&&SUPABASE_ANON_KEY.length>30&&!SUPABASE_ANON_KEY.includes("PASTE_");
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const url=s=>{try{let u=new URL(s);return ["http:","https:"].includes(u.protocol)?u.href:""}catch{return ""}};
+let db=configured&&window.supabase?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null,session=null,member=null,levels=[],players=[],completions=[],editing=null;
+const samples=[{id:"demo1",name:"Bloodbath",creator:"Riot",difficulty:"Extreme Demon",rank:1,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo2",name:"Acu",creator:"Neigefeu",difficulty:"Extreme Demon",rank:2,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo3",name:"Nine Circles",creator:"Zobros",difficulty:"Hard Demon",rank:3,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"}];
+function localLoad(){try{let d=JSON.parse(localStorage.getItem("sa-demonlist-v2")||"{}");levels=d.levels||samples.map(x=>({...x}));players=d.players||[{id:"p1",name:"Player 1",gd_username:""},{id:"p2",name:"Player 2",gd_username:""}];completions=d.completions||[]}catch{levels=samples.map(x=>({...x}));players=[];completions=[]}}
+function saveLocal(){localStorage.setItem("sa-demonlist-v2",JSON.stringify({levels,players,completions}))}
+const ordered=()=>[...levels].sort((a,b)=>a.rank-b.rank), done=id=>completions.filter(c=>c.level_id===id), pts=r=>Math.round(1000/Math.max(1,+r||1)*10)/10;
+function score(p){return Math.round(completions.filter(c=>c.player_id===p.id).reduce((s,c)=>{let l=levels.find(x=>x.id===c.level_id);return s+(l?pts(l.rank):0)},0)*10)/10}
+function hardest(p){return completions.filter(c=>c.player_id===p.id).map(c=>levels.find(l=>l.id===c.level_id)).filter(Boolean).sort((a,b)=>a.rank-b.rank)[0]}
+function msg(id,t,k=""){ $(id).textContent=t;$(id).className="status "+k}
+function canEdit(){return !db||Boolean(member)}
+function authUI(){ $("email").classList.toggle("hidden",!db||Boolean(session));$("signin").classList.toggle("hidden",!db||Boolean(session));$("signout").classList.toggle("hidden",!db||!session);
+$("connection").textContent=!db?"LOCAL PREVIEW — saves only in this browser":!session?"SHARED DATABASE SETUP • Sign in with an approved member email":!member?"Signed in but not approved to edit — ask the list admin":"SHARED ONLINE LIST • Signed in as "+member.display_name;
+$("connection").className="muted "+(db&&session&&!member?"bad":db&&member?"good":"");
+document.querySelectorAll("#levelForm input,#levelForm select,#levelForm button,#completionForm input,#completionForm select,#completionForm button,#playerForm input,#playerForm button").forEach(x=>x.disabled=Boolean(db&&!member))}
+async function refresh(){try{if(db&&session){let [l,p,c,m]=await Promise.all([db.from("levels").select("*").order("rank"),db.from("players").select("*").order("name"),db.from("completions").select("*").order("created_at",{ascending:false}),db.from("members").select("user_id,display_name").eq("user_id",session.user.id).maybeSingle()]);for(let r of [l,p,c,m])if(r.error)throw r.error;levels=l.data||[];players=p.data||[];completions=c.data||[];member=m.data||null}else if(!db){localLoad()}else{levels=[];players=[];completions=[];member=null}render();authUI()}catch(e){msg("levelStatus","Could not load data: "+e.message,"bad")}}
+async function move(id,target){target=Math.max(1,Math.min(levels.length,Math.floor(+target||1)));let l=levels.find(x=>x.id===id);if(!l)return;if(db&&member){let {error}=await db.rpc("move_level",{p_level_id:id,p_target_rank:target});if(error)throw error;await refresh()}else if(!db){let arr=ordered().filter(x=>x.id!==id);arr.splice(target-1,0,l);arr.forEach((x,i)=>x.rank=i+1);levels=arr;saveLocal();render()}else throw Error("Sign in with an approved member account to edit.")}
+async function deleteLevel(id){if(db&&member){let {error}=await db.rpc("delete_level_and_reorder",{p_level_id:id});if(error)throw error;await refresh()}else if(!db){levels=ordered().filter(x=>x.id!==id);levels.forEach((x,i)=>x.rank=i+1);completions=completions.filter(c=>c.level_id!==id);saveLocal();render()}else throw Error("Sign in with an approved member account to edit.")}
 function render(){
- const q=$('search').value.trim().toLowerCase(), f=$('filter').value;
- const sorted=[...levels].sort((a,b)=>rankValue(a)-rankValue(b)||a.name.localeCompare(b.name));
- const filtered=sorted.filter(l=>(f==='all'||l.difficulty===f)&&[l.name,l.creator,l.player,l.notes].join(' ').toLowerCase().includes(q));
- $('levels').innerHTML=filtered.map(l=>`<tr>
- <td class="rank ${sorted.indexOf(l)<3?'toprank':''}">#${sorted.indexOf(l)+1}</td>
- <td><span class="level">${safe(l.name)}</span><span class="sub">${safe(l.creator||'Creator not added')}</span></td>
- <td><span class="pill">${safe(l.difficulty)}</span></td>
- <td><b>${safe(l.player)}</b><span class="sub">${safe(l.progress||'Completion record')}</span></td>
- <td>${l.proof?`<a href="${safe(validUrl(l.proof))}" target="_blank" rel="noopener noreferrer">View proof ↗</a>`:'<span class="sub">No link</span>'}</td>
- <td><button data-edit="${safe(l.id)}">Edit</button> <button class="danger" data-delete="${safe(l.id)}">Delete</button></td>
- </tr>`).join('');
- $('empty').classList.toggle('hidden',filtered.length!==0);
- $('levelCount').textContent=levels.length;
- $('recordCount').textContent=levels.filter(l=>(l.progress||'').trim()==='100%'||/beaten|complete/i.test(l.progress||'')).length;
- $('playerCount').textContent=new Set(levels.map(l=>(l.player||'').trim()).filter(Boolean)).size;
+ let q=$("search").value.toLowerCase().trim(),f=$("filter").value,arr=ordered().filter(l=>(f==="all"||l.difficulty===f)&&[l.name,l.creator,l.notes].join(" ").toLowerCase().includes(q));
+ $("levels").innerHTML=arr.map(l=>{let d=done(l.id),thumb=url(l.thumbnail_url);return `<tr><td class="rank ${l.rank<=3?"toprank":""}">#${l.rank}</td><td><div class="levelcell">${thumb?`<img class="thumb" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.style.display='none'">`:'<div class="thumb placeholder">NO THUMB</div>'}<div><span class="levelname">${esc(l.name)}</span><span class="sub">${esc(l.creator||"Creator not added")}</span>${l.showcase_url?`<span class="sub"><a href="${esc(url(l.showcase_url))}" target="_blank" rel="noopener">Showcase ↗</a></span>`:""}</div></div></td><td><span class="pill">${esc(l.difficulty)}</span></td><td>${d.length}</td><td class="points">${pts(l.rank)}</td><td><div class="btnrow"><input class="rankinput" data-rank="${esc(l.id)}" type="number" min="1" max="${Math.max(1,levels.length)}" value="${l.rank}" aria-label="Rank"><button data-edit="${esc(l.id)}" ${canEdit()?"":"disabled"}>Edit</button><button data-del="${esc(l.id)}" ${canEdit()?"":"disabled"}>×</button></div></td></tr>`}).join("");
+ $("empty").classList.toggle("hidden",arr.length>0);
+ let board=players.map(p=>({p,points:score(p),count:completions.filter(c=>c.player_id===p.id).length,hard:hardest(p)})).sort((a,b)=>b.points-a.points||b.count-a.count||a.p.name.localeCompare(b.p.name));
+ $("board").innerHTML=board.map((x,i)=>`<tr><td class="rank ${i<3?"toprank":""}">#${i+1}</td><td><span class="playername">${esc(x.p.name)}</span><span class="sub">${esc(x.p.gd_username||"")}</span></td><td class="points">${x.points}</td><td>${x.count}</td><td>${x.hard?`#${x.hard.rank} ${esc(x.hard.name)}`:"—"}</td></tr>`).join("");
+ $("boardEmpty").classList.toggle("hidden",board.length>0);
+ $("levelCount").textContent=levels.length;$("completionCount").textContent=completions.length;$("playerCount").textContent=players.length;
+ $("recordPlayer").innerHTML=players.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")||'<option value="">Add a player first</option>';
+ $("recordLevel").innerHTML=ordered().map(l=>`<option value="${esc(l.id)}">#${l.rank} — ${esc(l.name)}</option>`).join("")||'<option value="">Add a level first</option>';
+ let recent=[...completions].sort((a,b)=>String(b.beaten_on||b.created_at||"").localeCompare(String(a.beaten_on||a.created_at||""))).slice(0,10);
+ $("recent").innerHTML=recent.map(c=>{let p=players.find(x=>x.id===c.player_id),l=levels.find(x=>x.id===c.level_id);return p&&l?`<div class="record"><div class="grow"><b>${esc(p.name)} beat ${esc(l.name)}</b><div class="muted">#${l.rank} • ${esc(c.beaten_on||"Date not set")} • ${pts(l.rank)} points</div></div>${c.proof_url?`<a href="${esc(url(c.proof_url))}" target="_blank" rel="noopener">Proof ↗</a>`:""}</div>`:""}).join("")||'<div class="muted">No completions yet.</div>';
 }
-function clearForm(){editingId=null;$('levelForm').reset();$('cancelEdit').classList.add('hidden');$('formStatus').textContent='';$('levelForm').querySelector('button[type=submit]').textContent='Add level';}
-$('levelForm').addEventListener('submit',e=>{
- e.preventDefault();
- const item={id:editingId||('level-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),name:$('levelName').value.trim(),creator:$('creator').value.trim(),difficulty:$('difficulty').value,player:$('player').value.trim(),progress:$('progress').value.trim()||'100%',proof:validUrl($('proof').value.trim()),notes:$('notes').value.trim(),demo:false};
- if(!item.name||!item.player){$('formStatus').textContent='Add a level name and player.';return;}
- if(editingId){levels=levels.map(l=>l.id===editingId?item:l);}else{levels.push(item);}
- save();render();clearForm();$('formStatus').textContent='Saved in this browser.';$('formStatus').className='status good';
-});
-$('cancelEdit').addEventListener('click',clearForm);
-$('levels').addEventListener('click',e=>{
- const ed=e.target.closest('[data-edit]');const del=e.target.closest('[data-delete]');
- if(ed){const l=levels.find(x=>x.id===ed.dataset.edit);if(!l)return;editingId=l.id;
- $('levelName').value=l.name;$('creator').value=l.creator||'';$('difficulty').value=l.difficulty;$('player').value=l.player;$('progress').value=l.progress||'';$('proof').value=l.proof||'';$('notes').value=l.notes||'';
- $('cancelEdit').classList.remove('hidden');$('levelForm').querySelector('button[type=submit]').textContent='Save changes';$('formStatus').textContent='Editing '+l.name;window.location.hash='records';}
- if(del){const l=levels.find(x=>x.id===del.dataset.delete);if(l&&confirm('Delete "'+l.name+'"?')){levels=levels.filter(x=>x.id!==l.id);save();render();}}
-});
-$('search').addEventListener('input',render);$('filter').addEventListener('change',render);
-$('export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(levels,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sadl-backup.json';a.click();URL.revokeObjectURL(a.href);$('backupStatus').textContent='Backup downloaded.';});
-$('import').addEventListener('click',async()=>{const file=$('importFile').files[0];if(!file){$('backupStatus').textContent='Choose a JSON backup first.';return;}try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||!data.every(x=>x&&typeof x.name==='string'&&typeof x.player==='string'))throw Error();levels=data.map((x,i)=>({...x,id:String(x.id||('import-'+i)),proof:validUrl(x.proof||'')}));save();render();$('backupStatus').textContent='Backup imported into this browser.';}catch{$('backupStatus').textContent='Could not import that file. Choose a SADL JSON backup.';}});
-$('connection').textContent='LOCAL PREVIEW';render();
-</script>
-</body>
-</html>
+function clearForm(){$("levelForm").reset();$("rank").value=levels.length+1;editing=null;$("saveLevel").textContent="Add level";$("cancelEdit").classList.add("hidden")}
+$("levelForm").addEventListener("submit",async e=>{e.preventDefault();let item={name:$("name").value.trim(),creator:$("creator").value.trim(),difficulty:$("difficulty").value,thumbnail_url:url($("thumbnail").value.trim()),showcase_url:url($("showcase").value.trim()),notes:$("notes").value.trim()},target=Math.max(1,+$("rank").value||1);try{if(db&&member){if(editing){let old=levels.find(x=>x.id===editing);let {error}=await db.from("levels").update(item).eq("id",editing);if(error)throw error;if(old.rank!==target)await move(editing,target)}else{let {data,error}=await db.from("levels").insert({...item,rank:levels.length+1}).select().single();if(error)throw error;await move(data.id,Math.min(target,levels.length+1));await refresh()}}else if(!db){if(editing){Object.assign(levels.find(x=>x.id===editing),item);await move(editing,target)}else{let l={id:"l"+Date.now(),...item,rank:levels.length+1};levels.push(l);await move(l.id,Math.min(target,levels.length))}}clearForm();msg("levelStatus","Level saved.","good")}catch(err){msg("levelStatus","Could not save: "+err.message,"bad")}});
+$("cancelEdit").onclick=clearForm;
+$("levels").addEventListener("click",async e=>{let ed=e.target.closest("[data-edit]"),del=e.target.closest("[data-del]");if(ed){let l=levels.find(x=>x.id===ed.dataset.edit);editing=l.id;$("name").value=l.name;$("creator").value=l.creator||"";$("difficulty").value=l.difficulty;$("rank").value=l.rank;$("thumbnail").value=l.thumbnail_url||"";$("showcase").value=l.showcase_url||"";$("notes").value=l.notes||"";$("saveLevel").textContent="Save changes";$("cancelEdit").classList.remove("hidden");location.hash="manage"}if(del){let l=levels.find(x=>x.id===del.dataset.del);if(l&&confirm('Delete "'+l.name+'" and its completion records?'))try{await deleteLevel(l.id);msg("levelStatus","Level deleted.","good")}catch(err){msg("levelStatus",err.message,"bad")}}});
+$("levels").addEventListener("change",async e=>{let i=e.target.closest("[data-rank]");if(i)try{await move(i.dataset.rank,i.value);msg("levelStatus","Rank updated; player points recalculated.","good")}catch(err){msg("levelStatus",err.message,"bad")}});
+$("playerForm").addEventListener("submit",async e=>{e.preventDefault();let name=$("playerName").value.trim(),gd_username=$("gdName").value.trim();try{if(db&&member){let {error}=await db.from("players").insert({name,gd_username});if(error)throw error;await refresh()}else if(!db){if(players.some(p=>p.name.toLowerCase()===name.toLowerCase()))throw Error("That player name already exists.");players.push({id:"p"+Date.now(),name,gd_username});saveLocal();render()}$("playerForm").reset();msg("playerStatus","Player added.","good")}catch(err){msg("playerStatus","Could not add player: "+err.message,"bad")}});
+$("completionForm").addEventListener("submit",async e=>{e.preventDefault();let player_id=$("recordPlayer").value,level_id=$("recordLevel").value,proof_url=url($("proof").value.trim()),beaten_on=$("date").value||null;if(completions.some(c=>c.player_id===player_id&&c.level_id===level_id)){msg("recordStatus","This player already has a record for that level.","bad");return}try{if(db&&member){let {error}=await db.from("completions").insert({player_id,level_id,proof_url,beaten_on,created_by:session.user.id});if(error)throw error;await refresh()}else if(!db){completions.push({id:"c"+Date.now(),player_id,level_id,proof_url,beaten_on,created_at:new Date().toISOString()});saveLocal();render()}$("completionForm").reset();msg("recordStatus","Completion added; points updated.","good")}catch(err){msg("recordStatus","Could not add completion: "+err.message,"bad")}});
+$("search").addEventListener("input",render);$("filter").addEventListener("change",render);
+$("signin").onclick=async()=>{let email=$("email").value.trim();if(!email)return;let {error}=await db.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});$("connection").textContent=error?"Sign-in error: "+error.message:"Check your email for the sign-in link."};
+$("signout").onclick=async()=>{await db.auth.signOut();session=null;member=null;await refresh()};
+async function boot(){if(!db){localLoad();authUI();render();return}let {data}=await db.auth.getSession();session=data.session;db.auth.onAuthStateChange((_e,s)=>{session=s;setTimeout(refresh,0)});await refresh()}boot();
+</script></body></html>
