@@ -6,7 +6,7 @@ begin;
 
 -- Arthur/other accidentally added members must not retain edit access.
 delete from public.members
-where user_id <> '2194f047-8bc8-4e67-a59d-6738694f5884'::uuid;
+where user_id is distinct from '2194f047-8bc8-4e67-a59d-6738694f5884'::uuid;
 
 create table if not exists public.level_runs (
   id uuid primary key default gen_random_uuid(),
