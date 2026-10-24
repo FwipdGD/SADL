@@ -142,17 +142,19 @@ begin
 
   -- Move all ranks out of the constrained range first, then rebuild them without collisions.
   update public.levels set rank = rank + 1000000;
-  with ordered as (
-    select id, row_number() over (
-      order by
-        case when id = p_level_id then p_target_rank else
-          case when current_rank < p_target_rank then rank - 1000000 - 1
-               when current_rank > p_target_rank then rank - 1000000 + 1
-               else p_target_rank end
-        end,
-        rank - 1000000
-    )::integer as new_rank
+  with original as (
+    select id, rank - 1000000 as old_rank
     from public.levels
+  ), ordered as (
+    select id, row_number() over (
+      order by case
+        when id = p_level_id then p_target_rank
+        when current_rank < p_target_rank and old_rank > current_rank and old_rank <= p_target_rank then old_rank - 1
+        when current_rank > p_target_rank and old_rank >= p_target_rank and old_rank < current_rank then old_rank + 1
+        else old_rank
+      end
+    )::integer as new_rank
+    from original
   )
   update public.levels l set rank = o.new_rank from ordered o where l.id = o.id;
 end;
