@@ -39,6 +39,14 @@ td,th{padding:11px 10px}
  .rankinput{width:72px}
 }
 
+
+/* Make level names stand out clearly in the leaderboard */
+#board .levelname,#board .playername{font-size:18px!important;line-height:1.35;font-weight:850}
+#board .sub{font-size:13px!important;line-height:1.4;margin-top:3px}
+#board td{padding-top:14px;padding-bottom:14px}
+#board .rank{font-size:16px}
+@media(max-width:700px){#board .levelname,#board .playername{font-size:18px!important}#board .sub{font-size:13px!important}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
