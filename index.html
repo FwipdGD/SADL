@@ -40,13 +40,13 @@ td,th{padding:11px 10px}
 }
 
 
-/* Make level names stand out clearly in the leaderboard */
-#board .levelname,#board .playername{font-size:18px!important;line-height:1.35;font-weight:850}
-#board .sub{font-size:13px!important;line-height:1.4;margin-top:3px}
-#board td{padding-top:14px;padding-bottom:14px}
-#board .rank{font-size:16px}
-@media(max-width:700px){#board .levelname,#board .playername{font-size:18px!important}#board .sub{font-size:13px!important}}
-
+/* Make leaderboard level names large and easy to scan */
+#board .levelname{display:inline-block;font-size:34px!important;line-height:1.12;font-weight:900;letter-spacing:-.5px}
+#board .playername{font-size:20px!important;line-height:1.3;font-weight:850}
+#board .sub{font-size:14px!important;line-height:1.4;margin-top:5px}
+#board td{padding-top:16px;padding-bottom:16px}
+#board .rank{font-size:18px}
+@media(max-width:700px){#board .levelname{font-size:28px!important;line-height:1.15}#board .playername{font-size:18px!important}#board .sub{font-size:13px!important}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
