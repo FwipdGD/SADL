@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SADL — Social Amateur Demon List</title>
+<style>
+:root{--bg:#0d0f14;--panel:#151922;--panel2:#1b202b;--line:#2a3140;--text:#f1f4fa;--muted:#9ca7ba;--accent:#df3549;--accent2:#ff596b;--green:#48d597}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#33202a 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:#ff8794}button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:9px 12px}button:hover{border-color:var(--accent2)}button.primary{background:var(--accent);border-color:var(--accent);font-weight:700}button.danger{color:#ff9aa5}
+.wrap{max-width:1100px;margin:auto;padding:0 20px}.top{border-bottom:1px solid var(--line);background:#0d0f14dd;position:sticky;top:0;backdrop-filter:blur(12px);z-index:3}.nav{display:flex;align-items:center;gap:20px;min-height:68px}.logo{font-weight:950;letter-spacing:2px;font-size:24px}.logo span{color:var(--accent2)}.navlinks{display:flex;gap:16px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none;color:inherit}.navlinks a:hover{color:white}.push{margin-left:auto}
+.hero{padding:44px 0 26px}.eyebrow{color:var(--accent2);font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:11px}.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:10px 0}.hero p{color:var(--muted);max-width:650px;margin:12px 0 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.stat,.panel{background:linear-gradient(140deg,var(--panel),#12151c);border:1px solid var(--line);border-radius:14px}.stat{padding:15px}.stat b{font-size:25px;display:block}.stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.panel{overflow:hidden}.sectionhead{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap}.sectionhead h2{font-size:16px;margin:0}.sectionhead small{color:var(--muted)}.tools{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}.tools input{min-width:190px}
+input,select,textarea{background:#0e1118;border:1px solid var(--line);color:var(--text);padding:10px 11px;border-radius:9px;max-width:100%}input:focus,select:focus,textarea:focus{outline:1px solid var(--accent2);border-color:var(--accent2)}
+.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:700px}th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;background:#11141b;padding:12px 15px}td{padding:13px 15px;border-top:1px solid #252b37}tbody tr:hover{background:#1b202b}td.rank{font-weight:900;color:var(--muted);width:60px}.rank.toprank{color:var(--accent2)}.level{font-weight:750}.sub{display:block;font-size:12px;color:var(--muted);font-weight:400}.pill{display:inline-flex;border:1px solid #5a303a;background:#2b1920;color:#ff9aa5;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:800}.empty{text-align:center;color:var(--muted);padding:30px}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 36px}.boxpad{padding:17px}.boxpad h3{margin:0 0 8px;font-size:15px}.boxpad p{color:var(--muted);font-size:13px;margin:0 0 12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:5px}.formgrid .full{grid-column:1/-1}.formgrid input,.formgrid select{width:100%}.rowbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.status{font-size:12px;color:var(--muted);margin-top:10px}.status.good{color:var(--green)}.status.bad{color:#ff9aa5}.foot{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding:22px 0 34px}.hidden{display:none!important}
+@media(max-width:700px){.nav{gap:12px}.navlinks{display:none}.hero{padding-top:30px}.stats{gap:8px}.stat{padding:11px}.stat b{font-size:21px}.lower{grid-template-columns:1fr}.sectionhead{align-items:flex-start}.tools{margin-left:0;width:100%}.tools input{flex:1;min-width:0}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap nav">
+  <div class="logo">S<span>A</span>DL</div>
+  <nav class="navlinks"><a href="#list">Demonlist</a><a href="#records">Records</a><a href="#about">Rules</a></nav>
+  <div class="push"><span id="connection" class="pill">LOCAL PREVIEW</span></div>
+</div></header>
+<main class="wrap">
+<section class="hero">
+  <div class="eyebrow">Community-ranked • Unofficial</div>
+  <h1>Social Amateur<br><span style="color:var(--accent2)">Demon List.</span></h1>
+  <p>SADL ranks the hardest Geometry Dash levels beaten by the crew. Submit completions, link your proof, and keep the list honest. Community project — not affiliated with Pointercrate or RobTop.</p>
+  <div class="stats">
+    <div class="stat"><b id="levelCount">0</b><span>Ranked levels</span></div>
+    <div class="stat"><b id="recordCount">0</b><span>Verified records</span></div>
+    <div class="stat"><b id="playerCount">0</b><span>Players represented</span></div>
+  </div>
+</section>
+<section class="panel" id="list">
+  <div class="sectionhead"><div><h2>01 / Main List</h2><small>Ranked hardest to easiest</small></div><div class="tools"><input id="search" placeholder="Search level or player…" aria-label="Search"><select id="filter"><option value="all">All difficulties</option><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></div></div>
+  <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Level</th><th>Difficulty</th><th>Top player / record</th><th>Proof</th><th></th></tr></thead><tbody id="levels"></tbody></table></div>
+  <div id="empty" class="empty hidden">No levels match. Add one below, or change your search.</div>
+</section>
+<div class="lower">
+<section class="panel" id="records"><div class="sectionhead"><h2>02 / Add or update a level</h2></div><div class="boxpad">
+<p>Preview mode saves data in this browser only. Connect Supabase (instructions in README) for everyone to share the same live list.</p>
+<form id="levelForm">
+<div class="formgrid">
+<label>Level name<input id="levelName" required maxlength="100" placeholder="Bloodbath"></label>
+<label>Creator<input id="creator" maxlength="100" placeholder="Riot"></label>
+<label>Difficulty<select id="difficulty"><option>Extreme Demon</option><option>Insane Demon</option><option>Hard Demon</option><option>Other</option></select></label>
+<label>Top player<input id="player" required maxlength="60" placeholder="Your username"></label>
+<label>Progress / completion<input id="progress" maxlength="30" placeholder="100%"></label>
+<label>Proof link (optional)<input id="proof" type="url" placeholder="https://youtu.be/…"></label>
+<label class="full">Notes (optional)<input id="notes" maxlength="240" placeholder="Completion date, extra context…"></label>
+</div>
+<div class="rowbuttons"><button class="primary" type="submit">Add level</button><button type="button" id="cancelEdit" class="hidden">Cancel edit</button></div>
+<div id="formStatus" class="status" role="status"></div>
+</form></div></section>
+<section class="panel"><div class="sectionhead"><h2>03 / Back up & share data</h2></div><div class="boxpad">
+<p>Use export/import to keep a backup while trying the design. These files do not sync between devices; live shared editing needs the database setup.</p>
+<div class="rowbuttons"><button id="export">Export JSON backup</button><label style="display:inline-flex;align-items:center;gap:8px"><input id="importFile" type="file" accept=".json,application/json" style="max-width:180px;padding:7px"></label><button id="import">Import backup</button></div>
+<div class="status" id="backupStatus"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>List standards</h3>
+<p>Agree the ranking as a group. Require credible completion proof, be clear about platform/mod rules, and resolve disputes before changing a rank. Only add real completions to the public list.</p>
+</div></section>
+</div>
+<section class="panel" id="about"><div class="sectionhead"><h2>04 / Rules & integrity</h2></div><div class="boxpad">
+<p><b>Unofficial community list.</b> SADL is a friends-only ranking project, not an official Geometry Dash leaderboard.</p>
+<p><b>Suggested rule:</b> a level is ranked only after at least one member has beaten it and shared proof. Rank by the group's agreed difficulty order, not just by the game's difficulty label. Keep progress records separate from completed levels.</p>
+<p><b>Editing:</b> in local preview, edits affect this browser only. Once connected to a shared database, use member sign-ins and database permissions rather than putting a shared password or secret key in the website.</p>
+</div></section>
+<footer class="foot">SADL • Community project • Not affiliated with RobTop Games or Pointercrate.</footer>
+</main>
+<script>
+const STORAGE_KEY = 'sadl-levels-v1';
+const seed = [
+ {id:'demo-1',name:'Bloodbath',creator:'Riot',difficulty:'Extreme Demon',player:'Your username',progress:'25% progress',proof:'',notes:'Demo entry — edit or remove this example',demo:true},
+ {id:'demo-2',name:'Add your first level',creator:'',difficulty:'Insane Demon',player:'Your friend',progress:'100%',proof:'',notes:'Replace this example with a real completion',demo:true}
+];
+let levels = load();
+let editingId = null;
+const $ = id => document.getElementById(id);
+function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY));return Array.isArray(x)?x:seed.map(v=>({...v}));}catch{return seed.map(v=>({...v}));}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(levels));}
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function validUrl(s){try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch{return '';}}
+function rankValue(l){return l.difficulty==='Extreme Demon'?0:l.difficulty==='Insane Demon'?1:l.difficulty==='Hard Demon'?2:3;}
+function render(){
+ const q=$('search').value.trim().toLowerCase(), f=$('filter').value;
+ const sorted=[...levels].sort((a,b)=>rankValue(a)-rankValue(b)||a.name.localeCompare(b.name));
+ const filtered=sorted.filter(l=>(f==='all'||l.difficulty===f)&&[l.name,l.creator,l.player,l.notes].join(' ').toLowerCase().includes(q));
+ $('levels').innerHTML=filtered.map(l=>`<tr>
+ <td class="rank ${sorted.indexOf(l)<3?'toprank':''}">#${sorted.indexOf(l)+1}</td>
+ <td><span class="level">${safe(l.name)}</span><span class="sub">${safe(l.creator||'Creator not added')}</span></td>
+ <td><span class="pill">${safe(l.difficulty)}</span></td>
+ <td><b>${safe(l.player)}</b><span class="sub">${safe(l.progress||'Completion record')}</span></td>
+ <td>${l.proof?`<a href="${safe(validUrl(l.proof))}" target="_blank" rel="noopener noreferrer">View proof ↗</a>`:'<span class="sub">No link</span>'}</td>
+ <td><button data-edit="${safe(l.id)}">Edit</button> <button class="danger" data-delete="${safe(l.id)}">Delete</button></td>
+ </tr>`).join('');
+ $('empty').classList.toggle('hidden',filtered.length!==0);
+ $('levelCount').textContent=levels.length;
+ $('recordCount').textContent=levels.filter(l=>(l.progress||'').trim()==='100%'||/beaten|complete/i.test(l.progress||'')).length;
+ $('playerCount').textContent=new Set(levels.map(l=>(l.player||'').trim()).filter(Boolean)).size;
+}
+function clearForm(){editingId=null;$('levelForm').reset();$('cancelEdit').classList.add('hidden');$('formStatus').textContent='';$('levelForm').querySelector('button[type=submit]').textContent='Add level';}
+$('levelForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const item={id:editingId||('level-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),name:$('levelName').value.trim(),creator:$('creator').value.trim(),difficulty:$('difficulty').value,player:$('player').value.trim(),progress:$('progress').value.trim()||'100%',proof:validUrl($('proof').value.trim()),notes:$('notes').value.trim(),demo:false};
+ if(!item.name||!item.player){$('formStatus').textContent='Add a level name and player.';return;}
+ if(editingId){levels=levels.map(l=>l.id===editingId?item:l);}else{levels.push(item);}
+ save();render();clearForm();$('formStatus').textContent='Saved in this browser.';$('formStatus').className='status good';
+});
+$('cancelEdit').addEventListener('click',clearForm);
+$('levels').addEventListener('click',e=>{
+ const ed=e.target.closest('[data-edit]');const del=e.target.closest('[data-delete]');
+ if(ed){const l=levels.find(x=>x.id===ed.dataset.edit);if(!l)return;editingId=l.id;
+ $('levelName').value=l.name;$('creator').value=l.creator||'';$('difficulty').value=l.difficulty;$('player').value=l.player;$('progress').value=l.progress||'';$('proof').value=l.proof||'';$('notes').value=l.notes||'';
+ $('cancelEdit').classList.remove('hidden');$('levelForm').querySelector('button[type=submit]').textContent='Save changes';$('formStatus').textContent='Editing '+l.name;window.location.hash='records';}
+ if(del){const l=levels.find(x=>x.id===del.dataset.delete);if(l&&confirm('Delete "'+l.name+'"?')){levels=levels.filter(x=>x.id!==l.id);save();render();}}
+});
+$('search').addEventListener('input',render);$('filter').addEventListener('change',render);
+$('export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(levels,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sadl-backup.json';a.click();URL.revokeObjectURL(a.href);$('backupStatus').textContent='Backup downloaded.';});
+$('import').addEventListener('click',async()=>{const file=$('importFile').files[0];if(!file){$('backupStatus').textContent='Choose a JSON backup first.';return;}try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||!data.every(x=>x&&typeof x.name==='string'&&typeof x.player==='string'))throw Error();levels=data.map((x,i)=>({...x,id:String(x.id||('import-'+i)),proof:validUrl(x.proof||'')}));save();render();$('backupStatus').textContent='Backup imported into this browser.';}catch{$('backupStatus').textContent='Could not import that file. Choose a SADL JSON backup.';}});
+$('connection').textContent='LOCAL PREVIEW';render();
+</script>
+</body>
+</html>
