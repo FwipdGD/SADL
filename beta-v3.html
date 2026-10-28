@@ -192,7 +192,7 @@ function playerAchievements(p){
  if(uniqueWins>=1)a.push({icon:'✦',title:'First list completion',desc:'Earned a first approved list completion.'});
  if(uniqueWins>=5)a.push({icon:'Ⅴ',title:'Five levels beaten',desc:'Completed five different ranked levels.'});
  if(uniqueWins>=10)a.push({icon:'⑩',title:'Double digits',desc:'Completed ten different ranked levels.'});
- if(uniqueWins>=25)a.push({icon:'★',title:'Quarter century',desc:'Completed 25 different ranked levels.'});
+ if(uniqueWins>=3)a.push({icon:'★',title:'No Mercy',desc:'Completed three different ranked levels.'});
  if(uniqueWins){let h=wins.slice().sort((x,y)=>Number(x.rank)-Number(y.rank))[0];a.push({icon:'◆',title:'Hardest completion',desc:'Hardest completed: #'+h.rank+' '+h.name});if(Number(h.rank)<=10)a.push({icon:'♛',title:'Top 10 victor',desc:'Beaten a level ranked in the top 10.'});}
  if(runs.length)a.push({icon:'%',title:'Progress hunter',desc:'Earned an approved progress record on a ranked level.'});
  if(runs.some(r=>Number(r.percent)>=90))a.push({icon:'90',title:'90% club',desc:'Reached at least 90% on a ranked level.'});
@@ -209,7 +209,7 @@ function renderAchievements(){
  ['✦','First list completion','Earn your first approved list completion.'],
  ['Ⅴ','Five levels beaten','Complete five different ranked levels.'],
  ['⑩','Double digits','Complete ten different ranked levels.'],
- ['★','Quarter century','Complete 25 different ranked levels.'],
+ ['★','No Mercy','Complete three different ranked levels.'],
  ['◆','Hardest completion','Earn an approved completion; your hardest level is shown on your profile.'],
  ['♛','Top 10 victor','Beat a level ranked in the top 10.'],
  ['%','Progress hunter','Earn an approved progress record.'],
