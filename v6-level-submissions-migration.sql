@@ -20,6 +20,8 @@ create table if not exists public.level_submissions (
 
 alter table public.level_submissions enable row level security;
 
+alter table public.levels add column if not exists gd_level_id text;
+
 drop policy if exists "Anyone can submit a level" on public.level_submissions;
 create policy "Anyone can submit a level"
   on public.level_submissions for insert to anon, authenticated
@@ -64,10 +66,10 @@ begin
     select coalesce(max(rank), 0) + 1 into next_rank from public.levels;
 
     insert into public.levels (
-      name, creator, difficulty, thumbnail_url, showcase_url, notes, rank,
+      name, creator, difficulty, gd_level_id, thumbnail_url, showcase_url, notes, rank,
       verifier_player_id, verifier_rank_at_verification
     ) values (
-      submission.name, submission.creator, submission.difficulty,
+      submission.name, submission.creator, submission.difficulty, submission.level_id,
       submission.thumbnail_url, submission.showcase_url, submission.notes,
       next_rank, null, null
     );
