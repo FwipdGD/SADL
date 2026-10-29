@@ -215,7 +215,7 @@ function achievementCatalog(){
  ['✪','Top Ten Collection','Beat three different top-10 levels.','epic',p=>countRank(p,10)>=3],
  ['♜','Top Five Collection','Beat four different top-five levels.','epic',p=>countRank(p,5)>=4],
  ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
- ['♔','The #1 Conqueror','Beat the level currently ranked #1.','epic',p=>beatRank(p,1)],
+ ['♜','Top Three Collector','Beat two different levels currently ranked in the top three.','epic',p=>countRank(p,3)>=2],
  ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
  ['♛','The Impossible Crown','Beat the level currently ranked #1 on SADL.','mythic',p=>beatRank(p,1)],
  ['⚑','The Ultimate Verifier','Be the first SADL player to beat the level ranked #1.','mythic',p=>verify(p)]
