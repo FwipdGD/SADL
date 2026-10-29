@@ -203,18 +203,18 @@ function achievementCatalog(){
  ['✦','First Victory','Earn your first approved level completion.','common',p=>unique(p)>=1],
  ['Ⅱ','Double Trouble','Beat two different ranked levels.','common',p=>unique(p)>=2],
  ['Ⅴ','Five Down','Beat five different ranked levels.','common',p=>unique(p)>=5],
- ['◆','List Victor','Beat any level on the ranked list.','common',p=>unique(p)>=1],
+ ['◆','List Victor','Beat a level on the ranked list.','common',p=>unique(p)>=1],
  ['★','Ten Victories','Beat ten different ranked levels.','rare',p=>unique(p)>=10],
  ['ⅩⅤ','Fifteen Strong','Beat fifteen different ranked levels.','rare',p=>unique(p)>=15],
  ['♜','Top Ten Victor','Beat a level ranked in the top 10.','rare',p=>beatRank(p,10)],
  ['♛','Top Five Victor','Beat a level ranked in the top five.','rare',p=>beatRank(p,5)],
- ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
  ['✪','Top Ten Collection','Beat three different top-10 levels.','epic',p=>countRank(p,10)>=3],
  ['♜','Top Five Collection','Beat four different top-five levels.','epic',p=>countRank(p,5)>=4],
+ ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
  ['♔','The #1 Conqueror','Beat the level currently ranked #1.','epic',p=>beatRank(p,1)],
- ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id)))),true],
- ['♛','The Impossible Crown','SECRET — Beat the level ranked #1 at the time of your completion.','mythic',p=>wins(p).some(c=>Number(c.rank_at_completion)===1),true],
- ['⚑','The Ultimate Verifier','SECRET — Verify a level while it is ranked #1.','mythic',p=>verify(p),true]
+ ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
+ ['♛','The Impossible Crown','Beat the level ranked #1 at the time of your completion.','mythic',p=>wins(p).some(c=>Number(c.rank_at_completion)===1)],
+ ['⚑','The Ultimate Verifier','Verify a level while it is ranked #1.','mythic',p=>verify(p)]
  ];
  return data.map((a,i)=>({id:'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
 }
@@ -248,7 +248,7 @@ function renderAchievements(){
  const mine=new Set(chosen?playerAchievements(chosen).map(a=>a.id):[]);
  const earned=mine.size,total=catalog.length;
  $('achievementSummary').innerHTML='<div class="achievement-progress" style="grid-column:1/-1"><div class="achievement-progress-head"><span>'+(chosen?esc(chosen.name)+' — Achievements':'Choose your player below to highlight your achievements')+'</span><b>'+earned+'/'+total+'</b></div><div class="progress-track"><span style="width:'+(earned/total*100)+'%"></span></div><small class="muted">'+(chosen?'Your unlocked achievements glow gold. Sign-in accounts and player profiles are separate, so change the player selector if needed.':'Signing in does not automatically identify your in-game player. Select your player below; unlocked badges will glow gold.')+'</small></div><div class="beta-stat"><b>'+players.filter(p=>playerAchievements(p).length>0).length+'</b><span>Players with achievements</span></div><div class="beta-stat"><b>'+players.reduce((n,p)=>n+playerAchievements(p).length,0)+'</b><span>Total unlocks</span></div><div class="beta-stat"><b>'+total+'/'+total+'</b><span>Achievements shown</span></div>';
- $('achievementBoard').innerHTML=['common','rare','epic','mythic'].map(r=>{const group=catalog.filter(a=>a.rarity===r);return '<h3 class="achievement-category" style="grid-column:1/-1">'+r+' · '+group.filter(a=>mine.has(a.id)).length+'/'+group.length+' unlocked</h3>'+group.map(a=>{const got=mine.has(a.id),unlockedAny=any(a),hidden=a.secret&&!unlockedAny;return '<div class="achievement-card '+(got?'earned':'locked')+(a.secret?' secret':'')+'"><div class="achievement-icon">'+(hidden?'?':a.icon)+'</div><div><b>'+(hidden?'Secret achievement':esc(a.title))+'</b><small>'+(hidden?'Unlock this secret achievement to reveal its name.':esc(a.desc))+'</small><span class="rarity rarity-'+r+'">'+r+'</span><div class="achievement-player">'+(got?'✓ Unlocked by '+esc(chosen.name):unlockedAny?'Unlocked by another player':'Not unlocked')+'</div></div></div>'}).join('')}).join('');
+ $('achievementBoard').innerHTML=['common','rare','epic','mythic'].map(r=>{const group=catalog.filter(a=>a.rarity===r);return '<h3 class="achievement-category" style="grid-column:1/-1">'+r+' · '+group.filter(a=>mine.has(a.id)).length+'/'+group.length+' unlocked</h3>'+group.map(a=>{const got=mine.has(a.id),unlockedAny=any(a);return '<div class="achievement-card '+(got?'earned':'locked')+'"><div class="achievement-icon">'+a.icon+'</div><div><b>'+esc(a.title)+'</b><small>'+esc(a.desc)+'</small><span class="rarity rarity-'+r+'">'+r+'</span><div class="achievement-player">'+(got?'✓ Unlocked by '+esc(chosen.name):unlockedAny?'Unlocked by another player':'Not unlocked')+'</div></div></div>'}).join('')}).join('');
 }
 function renderActivityHistory(all){
  const key='sadl-beta-v3-rank-snapshot';let old={};try{old=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}let now={};let events=[];
