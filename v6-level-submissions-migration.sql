@@ -69,8 +69,8 @@ begin
       name, creator, difficulty, gd_level_id, thumbnail_url, showcase_url, notes, rank,
       verifier_player_id, verifier_rank_at_verification
     ) values (
-      submission.name, submission.creator, submission.difficulty, submission.level_id,
-      submission.thumbnail_url, submission.showcase_url, submission.notes,
+      submission.name, coalesce(submission.creator, ''), submission.difficulty, submission.level_id,
+      coalesce(submission.thumbnail_url, ''), coalesce(submission.showcase_url, ''), coalesce(submission.notes, ''),
       next_rank, null, null
     );
 
