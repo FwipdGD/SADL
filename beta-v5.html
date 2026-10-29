@@ -198,7 +198,11 @@ function achievementCatalog(){
  const points=p=>score(p);
  const countRank=(p,n)=>new Set(won(p).filter(l=>Number(l.rank)<=n).map(l=>String(l.id))).size;
  const beatRank=(p,n)=>won(p).some(l=>Number(l.rank)<=n);
- const verify=p=>levels.some(l=>Number(l.rank)===1&&Number(l.verifier_rank_at_verification)===1&&String(l.verifier_player_id||l.verified_by_player_id||'')===String(p.id));
+ const verify=p=>levels.some(l=>{
+  if(Number(l.rank)!==1)return false;
+  const first=completions.filter(c=>String(c.level_id)===String(l.id)).sort((a,b)=>new Date(a.created_at||0).getTime()-new Date(b.created_at||0).getTime())[0];
+  return !!first&&String(first.player_id)===String(p.id);
+ });
  const data=[
  ['✦','First Victory','Earn your first approved level completion.','common',p=>unique(p)>=1],
  ['Ⅱ','Double Trouble','Beat two different ranked levels.','common',p=>unique(p)>=2],
@@ -213,8 +217,8 @@ function achievementCatalog(){
  ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
  ['♔','The #1 Conqueror','Beat the level currently ranked #1.','epic',p=>beatRank(p,1)],
  ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
- ['♛','The Impossible Crown','Beat the level ranked #1 at the time of your completion.','mythic',p=>wins(p).some(c=>Number(c.rank_at_completion)===1)],
- ['⚑','The Ultimate Verifier','Verify a level while it is ranked #1.','mythic',p=>verify(p)]
+ ['♛','The Impossible Crown','Beat the level currently ranked #1 on SADL.','mythic',p=>beatRank(p,1)],
+ ['⚑','The Ultimate Verifier','Be the first SADL player to beat the level ranked #1.','mythic',p=>verify(p)]
  ];
  return data.map((a,i)=>({id:'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
 }
