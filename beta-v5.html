@@ -133,7 +133,7 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 <section class="panel section tab-panel" id="activity" hidden><div class="sectionhead"><div><h2>Recent activity</h2><small>Recent approved completions and progress records</small></div></div><div class="boxpad"><div id="activityFeed" class="beta-feed"></div></div></section>
 <section class="panel section tab-panel" id="stats" hidden><div class="sectionhead"><div><h2>Statistics</h2><small>Live totals from the current SADL rankings</small></div><div class="tools"><button type="button" id="exportBackup">Export backup</button></div></div><div class="boxpad"><div id="betaStats" class="beta-stats"></div><div class="stats-leader-head"><div><h3>Player standings</h3><p class="muted">Ranked by points from approved completions and progress.</p></div><span class="stats-live">LIVE DATA</span></div><div id="betaLeaders" class="beta-leaders"></div></div></section>
 <section class="panel section tab-panel" id="achievements"><div class="sectionhead"><div><h2>Achievements</h2><small>Choose a player to see unlocked badges highlighted in gold. Secret badges stay hidden until first unlocked.</small></div><div class="tools"><select id="achievementPlayer" aria-label="Choose player for achievements"><option value="">Choose player…</option></select></div></div><div class="boxpad"><div id="achievementSummary" class="beta-stats"></div><div id="achievementBoard" class="achievement-grid"></div></div></section>
-<section class="panel section tab-panel" id="scoring"><div class="sectionhead"><h2>Scoring & rules</h2></div><div class="boxpad muted"><p><b style="color:var(--text)">Points:</b> a full completion earns <code>350 ÷ rank</code> points (rounded to one decimal). #1 gives 350, #5 gives 70, and #10 gives 35. Points recalculate when list ranks change.</p><p><b style="color:var(--text)">Progress:</b> percentage records from 50% to 99% earn one tenth of the level’s full points (so 35 points on #1); a 100% completion earns the full points. Only approved records count.</p><p><b style="color:var(--text)">Records:</b> full completions and percentage runs need a proof link and are reviewed before counting.</p><p><b style="color:var(--text)">Beta V5 achievements:</b> secret Top 1 badges only appear once unlocked. The database migration file <code>beta-v5-database-update.sql</code> adds fields needed to save verifier details and the rank at the time of a completion; run it in Supabase before testing those two achievements with live data.</p><p><b style="color:var(--text)">Privacy:</b> the public site shows display names and records, not sign-in email addresses. Shared editing requires an approved member account and the database setup.</p><p>This is an unofficial fan project and is not affiliated with Pointercrate or RobTop Games.</p></div></section>
+<section class="panel section tab-panel" id="scoring"><div class="sectionhead"><h2>Scoring & rules</h2></div><div class="boxpad muted"><p><b style="color:var(--text)">Points:</b> a full completion earns <code>350 ÷ rank</code> points (rounded to one decimal). #1 gives 350, #5 gives 70, and #10 gives 35. Points recalculate when list ranks change.</p><p><b style="color:var(--text)">Progress:</b> percentage records from 50% to 99% earn one tenth of the level’s full points (so 35 points on #1); a 100% completion earns the full points. Only approved records count.</p><p><b style="color:var(--text)">Records:</b> full completions and percentage runs need a proof link and are reviewed before counting.</p><p><b style="color:var(--text)">Beta V5 achievements:</b> badges are based on approved full completions, list ranks and points; progress percentages do not unlock achievements. The database migration file <code>beta-v5-database-update.sql</code> adds fields needed to save verifier details and the rank at the time of a completion; run it in Supabase before testing those two achievements with live data.</p><p><b style="color:var(--text)">Privacy:</b> the public site shows display names and records, not sign-in email addresses. Shared editing requires an approved member account and the database setup.</p><p>This is an unofficial fan project and is not affiliated with Pointercrate or RobTop Games.</p></div></section>
 <footer class="foot">SA Demonlist • Beta V5 preview • Unofficial community project</footer></main><div id="levelModal" class="modalback" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div class="modal"><div class="modalhead"><h2 id="detailTitle">Level details</h2><button type="button" id="closeDetails">Close</button></div><div id="detailHero" class="level-detail-hero"></div><p class="muted" id="detailMeta"></p><h3>SADL members who beat it</h3><div id="detailVictors"></div><h3>Highest progress from non-completers</h3><div id="detailRuns"></div></div></div><div id="profileModal" class="modalback" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><div class="modal"><div class="modalhead"><h2>Profile</h2><button type="button" id="closeProfile">Close</button></div><div id="profileContent"></div></div></div>
 <script>
 const SUPABASE_URL="https://vsfxcstwhgiwnyxbvder.supabase.co",SUPABASE_ANON_KEY="sb_publishable_9YLGQEaY8-jNROZ5BkM1Ww_lohptOJd";
@@ -194,52 +194,52 @@ function renderBetaInsights(){
 function achievementCatalog(){
  const wins=p=>completions.filter(c=>String(c.player_id)===String(p.id));
  const won=p=>wins(p).map(c=>levels.find(l=>String(l.id)===String(c.level_id))).filter(Boolean);
- const runs=p=>levelRuns.filter(r=>String(r.player_id)===String(p.id));
- const uw=p=>new Set(wins(p).map(c=>String(c.level_id))).size,ur=p=>new Set(runs(p).map(r=>String(r.level_id))).size;
- const points=p=>score(p),top=(p,n)=>won(p).some(l=>Number(l.rank)<=n),prog=(p,n)=>runs(p).some(r=>Number(r.percent)>=n);
- const recent=(p,n)=>wins(p).filter(c=>c.created_at&&Date.now()-new Date(c.created_at).getTime()<=30*86400000).length>=n;
+ const unique=p=>new Set(wins(p).map(c=>String(c.level_id))).size;
+ const points=p=>score(p);
+ const countRank=(p,n)=>new Set(won(p).filter(l=>Number(l.rank)<=n).map(l=>String(l.id))).size;
+ const beatRank=(p,n)=>won(p).some(l=>Number(l.rank)<=n);
  const verify=p=>levels.some(l=>Number(l.rank)===1&&Number(l.verifier_rank_at_verification)===1&&String(l.verifier_player_id||l.verified_by_player_id||'')===String(p.id));
  const data=[
- ['✦','First Steps','Earn your first approved completion.','common',p=>wins(p).length>=1],
- ['Ⅲ','Triple Threat','Complete three different levels.','common',p=>uw(p)>=3],
- ['Ⅴ','Five Down','Complete five different levels.','common',p=>uw(p)>=5],
- ['⑩','Double Digits','Complete ten different levels.','common',p=>uw(p)>=10],
- ['％','First Progress','Earn an approved progress record.','common',p=>runs(p).length>=1],
- ['½','Halfway There','Reach 50% on a ranked level.','common',p=>prog(p,50)],
- ['90','Ninety Club','Reach 90% on a ranked level.','common',p=>prog(p,90)],
- ['◆','Hardest Found','Complete your first ranked level.','common',p=>won(p).length>=1],
- ['↗','Climbing','Earn 50 list points.','common',p=>points(p)>=50],
- ['⌁','Getting Warm','Set progress on two different levels.','common',p=>ur(p)>=2],
- ['★','Ten Victories','Complete ten different levels.','rare',p=>uw(p)>=10],
- ['ⅩⅤ','Fifteen Strong','Complete fifteen different levels.','rare',p=>uw(p)>=15],
- ['ⅩⅩ','Twenty Deep','Complete twenty different levels.','rare',p=>uw(p)>=20],
- ['♛','Top 25 Victor','Beat a top 25 level.','rare',p=>top(p,25)],
- ['♜','Top 10 Victor','Beat a top 10 level.','rare',p=>top(p,10)],
- ['95','Five Percent Left','Reach 95% on a ranked level.','rare',p=>prog(p,95)],
- ['⌘','Grindset','Set progress on five different levels.','rare',p=>ur(p)>=5],
- ['◈','Quarter Century','Earn 250 list points.','rare',p=>points(p)>=250],
- ['⚡','Hot Streak','Earn five completions in 30 days.','rare',p=>recent(p,5)],
- ['◆','Multiple Nineties','Reach 90% on three different levels.','rare',p=>new Set(runs(p).filter(r=>Number(r.percent)>=90).map(r=>String(r.level_id))).size>=3],
- ['♛','Top Five Victor','Beat a top 5 level.','epic',p=>top(p,5)],
- ['♜','Podium Victor','Beat a top 3 level.','epic',p=>top(p,3)],
- ['✪','Fifty Victories','Complete fifty different levels.','epic',p=>uw(p)>=50],
- ['◈','Halfway to Legend','Earn 500 list points.','epic',p=>points(p)>=500],
- ['⌁','Progress Architect','Set progress on ten different levels.','epic',p=>ur(p)>=10],
- ['⚡','On Fire','Earn ten completions in 30 days.','epic',p=>recent(p,10)],
- ['▰','Top Ten Collection','Beat five different current top 10 levels.','epic',p=>new Set(won(p).filter(l=>Number(l.rank)<=10).map(l=>String(l.id))).size>=5],
- ['◉','Near Perfection','Reach 99% on a ranked level.','epic',p=>prog(p,99)],
- ['★','Centurion','Earn 1000 list points.','epic',p=>points(p)>=1000],
- ['♜','Elite Progress','Reach 95% on five different levels.','epic',p=>new Set(runs(p).filter(r=>Number(r.percent)>=95).map(r=>String(r.level_id))).size>=5],
- ['♛','The Impossible Crown','SECRET — Beat a level ranked #1 when the record was earned.','mythic',p=>wins(p).some(c=>Number(c.rank_at_completion||levels.find(l=>String(l.id)===String(c.level_id))?.rank)===1),true],
+ ['✦','First Victory','Earn your first approved level completion.','common',p=>unique(p)>=1],
+ ['Ⅱ','Double Trouble','Beat two different ranked levels.','common',p=>unique(p)>=2],
+ ['Ⅲ','Triple Threat','Beat three different ranked levels.','common',p=>unique(p)>=3],
+ ['Ⅴ','Five Down','Beat five different ranked levels.','common',p=>unique(p)>=5],
+ ['♧','First Steps','Earn 25 list points from approved records.','common',p=>points(p)>=25],
+ ['◆','Hardest Found','Beat a level ranked in the top 25.','common',p=>beatRank(p,25)],
+ ['♜','Climbing the Ranks','Beat a level ranked in the top 20.','common',p=>beatRank(p,20)],
+ ['✪','Seven Strong','Beat seven different ranked levels.','common',p=>unique(p)>=7],
+ ['♢','Tenacity','Earn 100 list points from approved records.','common',p=>points(p)>=100],
+ ['⚔','First Challenge','Beat a level ranked in the top 15.','common',p=>beatRank(p,15)],
+ ['★','Ten Victories','Beat ten different ranked levels.','rare',p=>unique(p)>=10],
+ ['♜','Top Ten Victor','Beat a level ranked in the top 10.','rare',p=>beatRank(p,10)],
+ ['♛','Top Five Victor','Beat a level ranked in the top five.','rare',p=>beatRank(p,5)],
+ ['◈','Quarter Century','Earn 250 list points from approved records.','rare',p=>points(p)>=250],
+ ['ⅩⅤ','Fifteen Strong','Beat fifteen different ranked levels.','rare',p=>unique(p)>=15],
+ ['⚔','Double Digits Elite','Beat two different top-10 levels.','rare',p=>countRank(p,10)>=2],
+ ['♕','Podium Contender','Beat a level ranked in the top three.','rare',p=>beatRank(p,3)],
+ ['✪','Top Ten Collection','Beat five different top-10 levels.','rare',p=>countRank(p,10)>=5],
+ ['⚡','Relentless','Earn 400 list points from approved records.','rare',p=>points(p)>=400],
+ ['♔','Top Ten Regular','Beat three different top-five levels.','rare',p=>countRank(p,5)>=3],
+ ['✪','Twenty Deep','Beat twenty different ranked levels.','epic',p=>unique(p)>=20],
+ ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
+ ['♜','Top Five Collection','Beat three different top-five levels.','epic',p=>countRank(p,5)>=3],
+ ['◈','Halfway to Legend','Earn 600 list points from approved records.','epic',p=>points(p)>=600],
+ ['⚔','Top Ten Dominator','Beat seven different top-10 levels.','epic',p=>countRank(p,10)>=7],
+ ['♔','The #1 Conqueror','Beat the level currently ranked #1.','epic',p=>beatRank(p,1)],
+ ['ⅩⅩⅤ','Full Roster','Beat all 25 ranked levels.','epic',p=>levels.length>=25&&levels.every(l=>wins(p).some(c=>String(c.level_id)===String(l.id)))],
+ ['★','Centurion','Earn 1000 list points from approved records.','epic',p=>points(p)>=1000],
+ ['♛','Top Three Sweep','Beat all three levels currently ranked in the top three.','epic',p=>[1,2,3].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
+ ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','epic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
+ ['♛','The Impossible Crown','SECRET — Beat the level ranked #1 at the time of your completion.','mythic',p=>wins(p).some(c=>Number(c.rank_at_completion)===1),true],
  ['⚑','The Ultimate Verifier','SECRET — Verify a level while it is ranked #1.','mythic',p=>verify(p),true],
- ['♕','Triple Crown','SECRET — Beat a #1 level and at least two top-three levels.','mythic',p=>top(p,1)&&new Set(won(p).filter(l=>Number(l.rank)<=3).map(l=>String(l.id))).size>=2,true],
- ['♜','Dominion','SECRET — Beat ten levels currently ranked in the top 10.','mythic',p=>new Set(won(p).filter(l=>Number(l.rank)<=10).map(l=>String(l.id))).size>=10,true],
- ['✹','Legendary Grind','SECRET — Reach 99% on five different levels.','mythic',p=>new Set(runs(p).filter(r=>Number(r.percent)>=99).map(r=>String(r.level_id))).size>=5,true],
- ['♔','Point Monarch','SECRET — Earn 2000 list points.','mythic',p=>points(p)>=2000,true],
- ['⚡','Golden Month','SECRET — Earn twenty completions in 30 days.','mythic',p=>recent(p,20),true],
- ['✪','Top Three Sweep','SECRET — Beat every current top-three level.','mythic',p=>[1,2,3].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id)))),true],
- ['◈','The Untouchable','SECRET — Reach 99% on the current #1 level.','mythic',p=>{let l=levels.find(l=>Number(l.rank)===1);return !!l&&runs(p).some(r=>String(r.level_id)===String(l.id)&&Number(r.percent)>=99)},true],
- ['♕','Verified Legend','SECRET — Verify a level at #1 and earn 1000 points.','mythic',p=>verify(p)&&points(p)>=1000,true]
+ ['♕','Triple Crown','SECRET — Beat the #1 level and two other top-three levels.','mythic',p=>beatRank(p,1)&&countRank(p,3)>=3,true],
+ ['♜','Dominion','SECRET — Beat ten different levels ranked in the top 10.','mythic',p=>countRank(p,10)>=10,true],
+ ['♔','Point Monarch','SECRET — Earn 2000 list points from approved records.','mythic',p=>points(p)>=2000,true],
+ ['✪','Complete the Circuit','SECRET — Beat all 25 ranked levels and earn at least 1000 points.','mythic',p=>levels.length>=25&&levels.every(l=>wins(p).some(c=>String(c.level_id)===String(l.id)))&&points(p)>=1000,true],
+ ['⚔','Top Three Master','SECRET — Beat five different levels that have held a top-three rank at completion.','mythic',p=>new Set(wins(p).filter(c=>Number(c.rank_at_completion)<=3).map(c=>String(c.level_id))).size>=5,true],
+ ['♕','Verified Legend','SECRET — Verify a level at #1 and earn 1000 points.','mythic',p=>verify(p)&&points(p)>=1000,true],
+ ['♜','Top Five Monarch','SECRET — Beat all five current top-five levels and earn 1500 points.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))&&points(p)>=1500,true],
+ ['♛','List Legend','SECRET — Beat all 25 ranked levels and earn 2000 points.','mythic',p=>levels.length>=25&&levels.every(l=>wins(p).some(c=>String(c.level_id)===String(l.id)))&&points(p)>=2000,true]
  ];
  return data.map((a,i)=>({id:'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
 }
