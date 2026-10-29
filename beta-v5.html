@@ -214,12 +214,12 @@ function achievementCatalog(){
  ['♜','Top Ten Victor','Beat a level ranked in the top 10.','rare',p=>beatRank(p,10)],
  ['♛','Top Five Victor','Beat a level ranked in the top five.','rare',p=>beatRank(p,5)],
  ['✪','Top Ten Collection','Beat three different top-10 levels.','epic',p=>countRank(p,10)>=3],
- ['⚑','Verify a Top 5','Verify a Top 5','epic',p=>verifyTopFive(p)],
+ ['⚑','Dedication','Verify a Top 5','epic',p=>verifyTopFive(p)],
  ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
  ['♜','Top Five Collector','Beat two different levels currently ranked in the top five.','epic',p=>countRank(p,5)>=2],
  ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
  ['♛','The Impossible Crown','Beat the level currently ranked #1 on SADL.','mythic',p=>beatRank(p,1)],
- ['⚑','Verify a Top 1','Verify a Top 1','mythic',p=>verify(p)]
+ ['⚑','Determination','Verify a Top 1','mythic',p=>verify(p)]
  ];
  return data.map((a,i)=>({id:'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
 }
