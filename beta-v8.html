@@ -152,7 +152,7 @@ const countryList=[["AF","Afghanistan"],["AL","Albania"],["DZ","Algeria"],["AR",
 function flag(code){if(!code)return "🌐";if(code==="XK")return "🇽🇰";return String.fromCodePoint(...code.toUpperCase().split("").map(c=>127397+c.charCodeAt(0)))} function flagHTML(code){if(!code)return "";let c=String(code).toLowerCase();if(!/^[a-z]{2}$/.test(c))return "";return `<img class="country-flag" src="https://flagcdn.com/24x18/${c}.png" srcset="https://flagcdn.com/48x36/${c}.png 2x" alt="${esc(code)} flag" loading="lazy">`}
 $("playerCountry").innerHTML='<option value="">Select country (optional)</option>'+countryList.map(([c,n])=>`<option value="${c}">${flag(c)} ${n}</option>`).join("");
 const view="list";document.body.dataset.view=view;document.body.dataset.section="list";
-function showSection(name){if(!["list","players","countries","manage","records","scoring","achievements","packs"].includes(name))name="list";document.body.dataset.section=name;document.querySelectorAll("#sectionTabs [data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));var recordPanel=document.getElementById("records");if(recordPanel){recordPanel.style.setProperty("display",name==="records"?"block":"none","important");recordPanel.style.setProperty("visibility",name==="records"?"visible":"hidden","important");recordPanel.style.setProperty("grid-column",name==="records"?"1 / -1":"auto");}var lower=document.querySelector(".lower");if(lower&&name==="records")lower.style.setProperty("display","block","important");else if(lower)lower.style.removeProperty("display");}
+function showSection(name){if(!["list","players","countries","manage","records","scoring","achievements","packs"].includes(name))name="list";document.body.dataset.section=name;document.querySelectorAll("#sectionTabs [data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));var recordPanel=document.getElementById("records");if(recordPanel){recordPanel.style.setProperty("display",name==="records"?"block":"none","important");recordPanel.style.setProperty("visibility",name==="records"?"visible":"hidden","important");recordPanel.style.setProperty("grid-column",name==="records"?"1 / -1":"auto");}var lower=document.querySelector(".lower");if(lower&&name==="records")lower.style.setProperty("display","block","important");else if(lower)lower.style.removeProperty("display");if(name==="achievements")renderAchievements();}
 document.getElementById("sectionTabs").addEventListener("click",e=>{const b=e.target.closest("[data-section]");if(b)showSection(b.dataset.section)});
 
 const samples=[{id:"demo1",name:"Bloodbath",creator:"Riot",difficulty:"Extreme Demon",rank:1,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo2",name:"Acu",creator:"Neigefeu",difficulty:"Extreme Demon",rank:2,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo3",name:"Nine Circles",creator:"Zobros",difficulty:"Hard Demon",rank:3,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"}];
@@ -205,17 +205,19 @@ function renderBetaInsights(){
 }
 function achievementCatalog(){
  const wins=p=>completions.filter(c=>String(c.player_id)===String(p.id));
- const won=p=>wins(p).map(c=>levels.find(l=>String(l.id)===String(c.level_id))).filter(Boolean);
+ const won=p=>wins(p).map(c=>({c,l:levels.find(l=>String(l.id)===String(c.level_id))})).filter(x=>x.l);
  const unique=p=>new Set(wins(p).map(c=>String(c.level_id))).size;
  const points=p=>score(p);
- const countRank=(p,n)=>new Set(won(p).filter(l=>Number(l.rank)<=n).map(l=>String(l.id))).size;
- const beatRank=(p,n)=>won(p).some(l=>Number(l.rank)<=n);
+ const rankAt=(c,l)=>Number(c.rank_at_completion||c.rank_when_completed||l.rank);
+ const countRank=(p,n)=>new Set(won(p).filter(x=>rankAt(x.c,x.l)<=n).map(x=>String(x.l.id))).size;
+ const beatRank=(p,n)=>won(p).some(x=>rankAt(x.c,x.l)<=n);
  const firstVictorForLevel=(l,p)=> {
   const first=completions.filter(c=>String(c.level_id)===String(l.id)).sort((a,b)=>new Date(a.created_at||0).getTime()-new Date(b.created_at||0).getTime())[0];
   return !!first&&String(first.player_id)===String(p.id);
  };
- const verify=p=>levels.some(l=>Number(l.rank)===1&&firstVictorForLevel(l,p));
- const verifyTopFive=p=>levels.some(l=>Number(l.rank)<=5&&firstVictorForLevel(l,p));
+ const verifierRank=l=>Number(l.verifier_rank_at_verification||l.rank);
+ const verify=p=>levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)===1);
+ const verifyTopFive=p=>levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)<=5);
  const data=[
  ['✦','First Victory','Earn your first approved level completion.','common',p=>unique(p)>=1],
  ['Ⅱ','Double Trouble','Beat two different ranked levels.','common',p=>unique(p)>=2],
@@ -228,9 +230,9 @@ function achievementCatalog(){
  ['✪','Top Ten Collection','Beat three different top-10 levels.','epic',p=>countRank(p,10)>=3],
  ['⚑','Dedication','Verify a Top 5','epic',p=>verifyTopFive(p)],
  ['♕','Podium Victor','Beat a level ranked in the top three.','epic',p=>beatRank(p,3)],
- ['♜','Top Five Collector','Beat two different levels currently ranked in the top five.','epic',p=>countRank(p,5)>=2],
- ['⚑','Top Five Sweep','Beat all five levels currently ranked in the top five.','mythic',p=>[1,2,3,4,5].every(n=>levels.some(l=>Number(l.rank)===n&&wins(p).some(c=>String(c.level_id)===String(l.id))))],
- ['♛','The Impossible Crown','Beat the level currently ranked #1 on SADL.','mythic',p=>beatRank(p,1)],
+ ['♜','Top Five Collector','Beat two different levels while they were ranked in the top five.','epic',p=>countRank(p,5)>=2],
+ ['⚑','Top Five Sweep','Beat five different levels while each was ranked in the top five.','mythic',p=>countRank(p,5)>=5],
+ ['♛','The Impossible Crown','Beat a level while it was ranked #1 on SADL.','mythic',p=>beatRank(p,1)],
  ['⚑','Determination','Verify a Top 1','mythic',p=>verify(p)]
  ];
  return data.map((a,i)=>({id:'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
@@ -302,7 +304,7 @@ function openPlayerProfile(playerId){
  let recentHtml=recent.length?recent.map(x=>'<div class="profile-recent"><b>#'+x.l.rank+' '+esc(x.l.name)+'</b><small class="muted">'+(x.c.created_at?esc(new Date(x.c.created_at).toLocaleDateString()):'Date unavailable')+'</small></div>').join(''):'<p class="muted">No approved completions yet.</p>';
  let runsHtml=runs.length?runs.map(x=>'<div class="profile-level"><div class="profile-level-rank">#'+x.l.rank+'</div><div class="profile-level-main"><b>'+esc(x.l.name)+'</b><small>'+esc(x.l.difficulty||'')+'</small></div><div class="profile-level-points">'+esc(x.r.percent)+'%</div></div>').join(''):'<p class="muted">No progress on unbeaten levels yet.</p>';
  let winsHtml=wins.length?wins.map(x=>'<div class="profile-level"><div class="profile-level-rank">#'+x.l.rank+'</div><div class="profile-level-main"><b>'+esc(x.l.name)+'</b><small>'+esc(x.l.difficulty||'')+'</small></div><div class="profile-level-points">+'+pts(x.l.rank).toFixed(1)+' pts</div></div>').join(''):'<p class="muted">No approved level completions yet.</p>';
- let awards=playerAchievements(p);let totalAchievements=achievementCatalog().length;let achievementProgressHtml='<div class="achievement-progress"><div class="achievement-progress-head"><span>Achievements</span><b>'+awards.length+'/'+totalAchievements+'</b></div><div class="progress-track"><span style="width:'+(awards.length/totalAchievements*100)+'%"></span></div><small class="muted">View all badges in the Achievements tab.</small></div>';
+ let awards=playerAchievements(p);let totalAchievements=achievementCatalog().length;let achievementProgressHtml='<div class="achievement-progress"><div class="achievement-progress-head"><span>Achievements</span><b>'+awards.length+'/'+totalAchievements+'</b></div><div class="progress-track"><span style="width:'+(awards.length/totalAchievements*100)+'%"></span></div><div class="actions"><button type="button" class="primary" data-view-player-achievements="'+esc(p.id)+'">Click to see '+esc(p.name)+'’s achievements</button></div></div>';
  $('profileContent').innerHTML='<div class="profile-hero v7-hero">'+(p.banner_url?'<div class="profile-banner" style="background-image:url('+JSON.stringify(p.banner_url)+')"></div>':'<div class="profile-banner"></div>')+'<div class="profile-title">'+(country?flagHTML(country):'')+'<span>'+playerNameHTML(p,false)+'</span><span class="player-title-badge">'+esc(playerTitle(p))+'</span></div>'+(p.gd_username?'<div class="muted">Geometry Dash: '+esc(p.gd_username)+'</div>':'')+'<div class="profile-points">'+score(p).toFixed(1)+' pts</div><div class="muted">Total list points</div><div class="v7-points-layout"><div><div class="achievement-progress"><div class="achievement-progress-head"><span>Level completion progress</span><b>'+wins.length+'/'+levels.length+'</b></div><div class="progress-track"><span style="width:'+(levels.length?wins.length/levels.length*100:0)+'%"></span></div><small class="muted">'+score(p).toFixed(1)+' / '+levels.reduce((sum,l)=>sum+pts(l.rank),0).toFixed(1)+' available points · '+(playerCosmetic(p).allLevels?'FULL LIST CLEARED — GOLDEN STATUS!':Math.max(0,levels.length-wins.length)+' levels left for golden status')+'</small><div class="v7-note">Milestones: 100 · 200 · 300 · 500 · 1,000 · 1,500 · 2,000 · 2,500 · 3,000 · 3,500 · 4,000 · 4,500 · 5,000</div></div></div><div class="v7-milestones"><span>MAX</span><span>5k</span><span>4k</span><span>3k</span><span>2k</span><span>1k</span><span>0</span><div class="v7-waterbar"><div class="v7-waterfill" style="height:'+Math.min(100,Math.max(0,score(p)/(levels.reduce((sum,l)=>sum+pts(l.rank),0)||1)*100))+'%"></div></div></div></div><span class="profile-rank">LEADERBOARD POSITION · #'+position+'</span></div><div class="profile-compare"><label for="comparePlayer">Compare with a rival</label><div class="profile-compare-controls"><select id="comparePlayer">'+players.filter(q=>String(q.id)!==String(p.id)).map(q=>'<option value="'+esc(q.id)+'">'+esc(q.name)+'</option>').join('')+'</select><button type="button" id="comparePlayerButton" class="primary" '+(players.length<2?'disabled':'')+'>Compare</button></div><div id="profileCompareResult"></div></div><div class="profile-stats"><div class="profile-stat"><b>'+wins.length+'</b><span>Total levels beaten</span></div><div class="profile-stat"><b>'+(wins.length?'#'+wins[0].l.rank:'—')+'</b><span>Hardest completed</span></div><div class="profile-stat"><b>'+awards.length+'</b><span>Achievements</span></div></div><h3 class="profile-subhead">Recent completions</h3>'+recentHtml+'' + achievementProgressHtml + '<h3 class="profile-subhead">All levels beaten</h3>'+winsHtml+'<h3 class="profile-subhead">Levels being grinded</h3>'+runsHtml;
  $('profileModal').classList.add('open');
 }
@@ -329,7 +331,7 @@ $("board").addEventListener("click",e=>{let name=e.target.closest("[data-player-
 $("board").addEventListener("keydown",e=>{let name=e.target.closest("[data-player-profile]");if(name&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openPlayerProfile(name.dataset.playerProfile)}});
 $("countryBoard").addEventListener("click",e=>{let name=e.target.closest("[data-country-profile]");if(name)openCountryProfile(name.dataset.countryProfile)});
 $("countryBoard").addEventListener("keydown",e=>{let name=e.target.closest("[data-country-profile]");if(name&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openCountryProfile(name.dataset.countryProfile)}});
-$("profileContent").addEventListener("click",e=>{let b=e.target.closest("[data-country-player]");if(b){openPlayerProfile(b.dataset.countryPlayer);return}if(e.target.closest("#comparePlayerButton")){let title=$("profileContent").querySelector(".profile-title span")?.textContent,primary=players.find(p=>p.name===title);if(primary)renderPlayerComparison(primary.id,$("comparePlayer").value)}});
+$("profileContent").addEventListener("click",e=>{let achievement=e.target.closest("[data-view-player-achievements]");if(achievement){let playerId=achievement.dataset.viewPlayerAchievements;closeProfile();showSection("achievements");if($("achievementPlayer"))$("achievementPlayer").value=playerId;renderAchievements();return}let b=e.target.closest("[data-country-player]");if(b){openPlayerProfile(b.dataset.countryPlayer);return}if(e.target.closest("#comparePlayerButton")){let title=$("profileContent").querySelector(".profile-title span")?.textContent,primary=players.find(p=>p.name===title);if(primary)renderPlayerComparison(primary.id,$("comparePlayer").value)}});
 $("closeProfile").onclick=closeProfile;
 $("profileModal").addEventListener("click",e=>{if(e.target===$("profileModal"))closeProfile()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProfile()});
