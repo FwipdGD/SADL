@@ -216,11 +216,8 @@ function achievementCatalog(){
   return !!first&&String(first.player_id)===String(p.id);
  };
  const verifierRank=l=>Number(l.verifier_rank_at_verification||l.rank);
- const restoredFwipVerification=p=>{
-  const identity=[p.name,p.gd_username,p.username].some(v=>String(v||"").trim().toLowerCase()==="fwipgd");
-  const fij13=levels.some(l=>String(l.name||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"")==="fij13");
-  return identity&&fij13;
- };
+ const restoredFwipVerification=p=>
+  [p.name,p.gd_username,p.username].some(v=>String(v||"").trim().toLowerCase()==="fwipgd");
  const verify=p=>restoredFwipVerification(p)||levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)===1);
  const verifyTopFive=p=>restoredFwipVerification(p)||levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)<=5);
  const data=[
