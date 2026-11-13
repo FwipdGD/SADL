@@ -216,9 +216,10 @@ function achievementCatalog(){
   return !!first&&String(first.player_id)===String(p.id);
  };
  const verifierRank=l=>Number(l.verifier_rank_at_verification||l.rank);
- const restoredFwipVerification=p=>
-  [p.name,p.gd_username,p.username].some(v=>String(v||"").trim().toLowerCase()==="fwipgd");
- const verify=p=>restoredFwipVerification(p)||levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)===1);
+ const playerIs=(p,name)=>[p.name,p.gd_username,p.username].some(v=>String(v||"").trim().toLowerCase()===name);
+ const restoredFwipVerification=p=>playerIs(p,"fwipgd");
+ const restoredArtsonicDetermination=p=>playerIs(p,"artsonic");
+ const verify=p=>restoredFwipVerification(p)||restoredArtsonicDetermination(p)||levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)===1);
  const verifyTopFive=p=>restoredFwipVerification(p)||levels.some(l=>String(l.verifier_player_id||l.verified_by_player_id||"")===String(p.id)&&verifierRank(l)<=5);
  const data=[
  ['✦','First Victory','Earn your first approved level completion.','common',p=>unique(p)>=1],
