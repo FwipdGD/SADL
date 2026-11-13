@@ -91,6 +91,7 @@ begin
     v_verifier_top5 := true;
     v_verifier_top1 := true;
   elsif v_player_name = 'artsonic' or v_gd_username = 'artsonic' then
+    v_verifier_top5 := true;
     v_verifier_top1 := true;
   end if;
 
