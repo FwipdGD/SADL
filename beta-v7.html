@@ -115,6 +115,9 @@ body[data-view="list"][data-section="records"] #records,#activity,#stats{display
 body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-section="players"] #players,body[data-view="list"][data-section="countries"] #countries,body[data-view="list"][data-section="scoring"] #scoring,body[data-view="list"][data-section="manage"] #manage,body[data-view="list"][data-section="stats"] #stats{display:block!important}
 @media(max-width:700px){.wrap{padding:0 12px}.hero{padding-top:24px}.section-tabs{display:flex;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.section-tabs button{white-space:nowrap;padding:8px 12px}.beta-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.beta-stat{padding:12px}.beta-stat b{font-size:25px}#board .levelname{font-size:20px!important}.levelcell{min-width:330px}.thumb{width:160px;height:90px}.stats-leader-head{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* V7 cosmetic tiers */
+.player-name-wrap{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}.player-name-glow{font-weight:850;text-shadow:0 0 7px currentColor,0 0 16px currentColor}.tier-rainbow{background:linear-gradient(90deg,#f44,#fa4,#ff5,#5d8,#4cf,#97f,#f6c);background-clip:text;-webkit-background-clip:text;color:transparent}.tier-dual{background:linear-gradient(90deg,#f45 0 48%,#49f 52%);background-clip:text;-webkit-background-clip:text;color:transparent}.tier-violet{background:linear-gradient(90deg,#a6f,#fff,#73c);background-clip:text;-webkit-background-clip:text;color:transparent}.tier-gold{color:#ffdf78;text-shadow:0 0 8px #fc4,0 0 20px #fa3}.tier-white{color:#fff;text-shadow:0 0 8px #fff,0 0 18px #bdf}.achievement-mini-icons{display:inline-flex;gap:3px}.achievement-mini-icons span{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;font-size:11px;background:#222431;border:1px solid #555b70;box-shadow:0 0 8px currentColor}.achievement-mini-icons .master-trophy{color:#ffdf78;background:#3a2b12;border-color:#d7a83e}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -182,7 +185,7 @@ function render(){
  $("empty").classList.toggle("hidden",arr.length>0);if($("filterNote"))$("filterNote").textContent=selectedPlayer?((players.find(p=>String(p.id)===String(selectedPlayer))||{}).name||"Selected player")+": gold glow marks approved completions. "+(completionMode==="beaten"?"Showing beaten levels.":completionMode==="unbeaten"?"Showing unbeaten levels.":"Showing all ranked levels."):"Choose a player to highlight their completed levels in gold. Filters never change official ranks.";
  let board=players.map(p=>({p,points:score(p),count:completions.filter(c=>c.player_id===p.id).length,hard:hardest(p)})).sort((a,b)=>b.points-a.points||b.count-a.count||a.p.name.localeCompare(b.p.name));
   let countryTotals={};players.forEach(p=>{let code=String(p.country_code||"").trim().toUpperCase();if(!/^[A-Z]{2}$/.test(code))return;let c=countryTotals[code]||(countryTotals[code]={code,name:(countryList.find(x=>x[0]===code)||[code,code])[1],points:0,players:0});c.points=Math.round((c.points+score(p))*10)/10;c.players++});let countries=Object.values(countryTotals).sort((a,b)=>b.points-a.points||b.players-a.players||a.name.localeCompare(b.name));$("countryBoard").innerHTML=countries.map((c,i)=>`<tr><td class="rank ${i<3?"toprank":""}">#${i+1}</td><td><span class="playername country-name profile-open" data-country-profile="${esc(c.code)}" role="button" tabindex="0">${flagHTML(c.code)} <span>${esc(c.code)}</span></span></td><td class="points">${c.points.toFixed(1)}</td></tr>`).join("");$("countryEmpty").classList.toggle("hidden",countries.length>0);
- $("board").innerHTML=board.map((x,i)=>`<tr><td class="rank ${i<3?"toprank":""}">#${i+1}</td><td><span class="playername profile-open" data-player-profile="${esc(x.p.id)}" role="button" tabindex="0">${String(x.p.country_code||"").trim()?flagHTML(String(x.p.country_code).trim().toUpperCase())+" "+esc(String(x.p.country_code).trim().toUpperCase())+" ":""}${esc(x.p.name)}</span><span class="sub">${esc(x.p.gd_username||"")}</span></td><td class="points">${x.points}</td><td>${x.count}</td><td>${x.hard?`#${x.hard.rank} ${esc(x.hard.name)}`:"—"}</td><td><div class="btnrow"><button data-player-edit="${esc(x.p.id)}" ${canEdit()?"":"disabled"}>Edit</button><button data-player-del="${esc(x.p.id)}" ${canEdit()?"":"disabled"}>Remove</button></div></td></tr>`).join("");
+ $("board").innerHTML=board.map((x,i)=>`<tr><td class="rank ${i<3?"toprank":""}">#${i+1}</td><td><span class="playername profile-open" data-player-profile="${esc(x.p.id)}" role="button" tabindex="0">${playerNameHTML(x.p,true)}</span><span class="sub">${esc(x.p.gd_username||"")}</span></td><td class="points">${x.points}</td><td>${x.count}</td><td>${x.hard?`#${x.hard.rank} ${esc(x.hard.name)}`:"—"}</td><td><div class="btnrow"><button data-player-edit="${esc(x.p.id)}" ${canEdit()?"":"disabled"}>Edit</button><button data-player-del="${esc(x.p.id)}" ${canEdit()?"":"disabled"}>Remove</button></div></td></tr>`).join("");
  $("boardEmpty").classList.toggle("hidden",board.length>0);
  $("levelCount").textContent=levels.length;$("completionCount").textContent=completions.length;$("playerCount").textContent=players.length;renderBetaInsights();
  $("recordPlayer").innerHTML=players.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")||'<option value="">Add a player first</option>';if($("playerLevelFilter")){let prior=$("playerLevelFilter").value;$("playerLevelFilter").innerHTML='<option value="">Choose player…</option>'+players.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");$("playerLevelFilter").value=players.some(p=>String(p.id)===String(prior))?prior:""}if($("verifierPlayer")){let priorVerifier=$("verifierPlayer").value;$("verifierPlayer").innerHTML='<option value="">Not set</option>'+players.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");$("verifierPlayer").value=players.some(p=>String(p.id)===String(priorVerifier))?priorVerifier:""}
@@ -300,7 +303,7 @@ function openPlayerProfile(playerId){
  let runsHtml=runs.length?runs.map(x=>'<div class="profile-level"><div class="profile-level-rank">#'+x.l.rank+'</div><div class="profile-level-main"><b>'+esc(x.l.name)+'</b><small>'+esc(x.l.difficulty||'')+'</small></div><div class="profile-level-points">'+esc(x.r.percent)+'%</div></div>').join(''):'<p class="muted">No progress on unbeaten levels yet.</p>';
  let winsHtml=wins.length?wins.map(x=>'<div class="profile-level"><div class="profile-level-rank">#'+x.l.rank+'</div><div class="profile-level-main"><b>'+esc(x.l.name)+'</b><small>'+esc(x.l.difficulty||'')+'</small></div><div class="profile-level-points">+'+pts(x.l.rank).toFixed(1)+' pts</div></div>').join(''):'<p class="muted">No approved level completions yet.</p>';
  let awards=playerAchievements(p);let totalAchievements=achievementCatalog().length;let achievementProgressHtml='<div class="achievement-progress"><div class="achievement-progress-head"><span>Achievements</span><b>'+awards.length+'/'+totalAchievements+'</b></div><div class="progress-track"><span style="width:'+(awards.length/totalAchievements*100)+'%"></span></div><small class="muted">View all badges in the Achievements tab.</small></div>';
- $('profileContent').innerHTML='<div class="profile-hero"><div class="profile-title">'+(country?flagHTML(country):'')+'<span>'+esc(p.name)+'</span><span class="player-title-badge">'+esc(playerTitle(p))+'</span></div>'+(p.gd_username?'<div class="muted">Geometry Dash: '+esc(p.gd_username)+'</div>':'')+'<div class="profile-points">'+score(p).toFixed(1)+' pts</div><div class="muted">Total list points</div><span class="profile-rank">LEADERBOARD POSITION · #'+position+'</span></div><div class="profile-compare"><label for="comparePlayer">Compare with a rival</label><div class="profile-compare-controls"><select id="comparePlayer">'+players.filter(q=>String(q.id)!==String(p.id)).map(q=>'<option value="'+esc(q.id)+'">'+esc(q.name)+'</option>').join('')+'</select><button type="button" id="comparePlayerButton" class="primary" '+(players.length<2?'disabled':'')+'>Compare</button></div><div id="profileCompareResult"></div></div><div class="profile-stats"><div class="profile-stat"><b>'+wins.length+'</b><span>Total levels beaten</span></div><div class="profile-stat"><b>'+(wins.length?'#'+wins[0].l.rank:'—')+'</b><span>Hardest completed</span></div><div class="profile-stat"><b>'+awards.length+'</b><span>Achievements</span></div></div><h3 class="profile-subhead">Recent completions</h3>'+recentHtml+'' + achievementProgressHtml + '<h3 class="profile-subhead">All levels beaten</h3>'+winsHtml+'<h3 class="profile-subhead">Levels being grinded</h3>'+runsHtml;
+ $('profileContent').innerHTML='<div class="profile-hero"><div class="profile-title">'+(country?flagHTML(country):'')+'<span>'+playerNameHTML(p,false)+'</span><span class="player-title-badge">'+esc(playerTitle(p))+'</span></div>'+(p.gd_username?'<div class="muted">Geometry Dash: '+esc(p.gd_username)+'</div>':'')+'<div class="profile-points">'+score(p).toFixed(1)+' pts</div><div class="muted">Total list points</div><span class="profile-rank">LEADERBOARD POSITION · #'+position+'</span></div><div class="profile-compare"><label for="comparePlayer">Compare with a rival</label><div class="profile-compare-controls"><select id="comparePlayer">'+players.filter(q=>String(q.id)!==String(p.id)).map(q=>'<option value="'+esc(q.id)+'">'+esc(q.name)+'</option>').join('')+'</select><button type="button" id="comparePlayerButton" class="primary" '+(players.length<2?'disabled':'')+'>Compare</button></div><div id="profileCompareResult"></div></div><div class="profile-stats"><div class="profile-stat"><b>'+wins.length+'</b><span>Total levels beaten</span></div><div class="profile-stat"><b>'+(wins.length?'#'+wins[0].l.rank:'—')+'</b><span>Hardest completed</span></div><div class="profile-stat"><b>'+awards.length+'</b><span>Achievements</span></div></div><h3 class="profile-subhead">Recent completions</h3>'+recentHtml+'' + achievementProgressHtml + '<h3 class="profile-subhead">All levels beaten</h3>'+winsHtml+'<h3 class="profile-subhead">Levels being grinded</h3>'+runsHtml;
  $('profileModal').classList.add('open');
 }
 function renderPlayerComparison(primaryId,otherId){
@@ -330,6 +333,40 @@ $("profileContent").addEventListener("click",e=>{let b=e.target.closest("[data-c
 $("closeProfile").onclick=closeProfile;
 $("profileModal").addEventListener("click",e=>{if(e.target===$("profileModal"))closeProfile()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProfile()});
+
+function playerCosmetic(p){
+ const wins=completions.filter(c=>String(c.player_id)===String(p.id));
+ const won=new Set(wins.map(c=>String(c.level_id)));
+ const allLevels=levels.length>0&&levels.every(l=>won.has(String(l.id)));
+ const points=score(p);let cls="",color="#454957";
+ if(allLevels){cls="tier-gold";color="#ffdf78"}
+ else if(points>=5000){cls="tier-white";color="#fff"}
+ else if(points>=4500)cls="tier-rainbow";
+ else if(points>=4000)cls="tier-violet";
+ else if(points>=3500)cls="tier-dual";
+ else if(points>=3000)color="#ff4545";
+ else if(points>=2500)color="#ff963c";
+ else if(points>=2000)color="#a5e879";
+ else if(points>=1500)color="#42d77b";
+ else if(points>=1000)color="#45e8e0";
+ else if(points>=900)color="#a66bdb";
+ else if(points>=800)color="#39c6d9";
+ else if(points>=700)color="#3978d9";
+ else if(points>=600)color="#243e80";
+ else if(points>=500)color="#dc4545";
+ else if(points>=400)color="#d77c38";
+ else if(points>=300)color="#315c3d";
+ else if(points>=200)color="#8a6245";
+ else if(points>=100)color="#9ca3af";
+ const catalog=achievementCatalog(),earned=playerAchievements(p),allAwards=earned.length===catalog.length&&catalog.length>0;
+ const tiers=["common","rare","epic","mythic"],symbols={common:"✦",rare:"◆",epic:"✪",mythic:"♛"};
+ const badges=allAwards?'<span class="master-trophy" title="All achievements">🏆</span>':tiers.filter(t=>earned.some(a=>a.rarity===t)).map(t=>'<span title="'+t+' achievements">'+symbols[t]+'</span>').join("");
+ return {cls,color,allLevels,badges};
+}
+function playerNameHTML(p,withCountry){
+ const c=playerCosmetic(p);
+ return '<span class="player-name-wrap">'+(withCountry&&p.country_code?flagHTML(String(p.country_code).toUpperCase())+' ':'')+'<span class="player-name-glow '+c.cls+'" style="color:'+c.color+'">'+esc(p.name)+'</span>'+(c.badges?'<span class="achievement-mini-icons">'+c.badges+'</span>':'')+'</span>';
+}
 function playerTitle(p){let n=completions.filter(c=>String(c.player_id)===String(p.id)).length,board=players.map(q=>({p:q,pts:score(q)})).sort((a,b)=>b.pts-a.pts),pos=board.findIndex(x=>String(x.p.id)===String(p.id))+1;if(pos===1&&score(p)>0)return "TOP 1";if(n>=10)return "Demon Slayer";if(pos>0&&pos<=3&&score(p)>0)return "Podium Contender";if(levelRuns.some(r=>String(r.player_id)===String(p.id)&&Number(r.percent)>=90))return "Progress Hunter";if(n)return "List Victor";return "Challenger"}
 let rankHistory={};try{rankHistory=JSON.parse(localStorage.getItem("sadl_beta_rank_history")||"{}")}catch{}
 function rememberRankHistory(){let now=new Date().toISOString(),changed=false;for(const l of ordered()){let id=String(l.id),current=Number(l.rank),arr=Array.isArray(rankHistory[id])?rankHistory[id]:[];if(!arr.length||Number(arr[arr.length-1].rank)!==current){arr.push({date:now,rank:current});changed=true}rankHistory[id]=arr.slice(-30)}if(changed){try{localStorage.setItem("sadl_beta_rank_history",JSON.stringify(rankHistory))}catch{}}}
