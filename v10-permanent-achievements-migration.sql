@@ -160,7 +160,7 @@ $$;
 
 drop trigger if exists completions_award_achievements on public.completions;
 create trigger completions_award_achievements
-before insert or update of player_id, level_id, rank_at_completion on public.completions
+after insert or update of player_id, level_id, rank_at_completion on public.completions
 for each row execute function public.award_achievements_after_completion();
 
 drop trigger if exists levels_award_verifier_achievements on public.levels;
