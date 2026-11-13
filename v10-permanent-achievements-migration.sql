@@ -58,10 +58,12 @@ declare
   v_verifier_top5 boolean := false;
   v_verifier_top1 boolean := false;
   v_player_name text := '';
+  v_gd_username text := '';
 begin
   if p_player_id is null then return; end if;
 
-  select lower(btrim(name)) into v_player_name
+  select lower(btrim(name)), lower(btrim(coalesce(gd_username, '')))
+  into v_player_name, v_gd_username
   from public.players where id = p_player_id;
   if not found then return; end if;
 
@@ -85,10 +87,10 @@ begin
   -- Historical restoration requested by the list owner:
   -- FwipGD verified FIJ 13 while it was #1 (therefore also Top 5).
   -- Artsonic verified a Top 1.
-  if v_player_name = 'fwipgd' then
+  if v_player_name = 'fwipgd' or v_gd_username = 'fwipgd' then
     v_verifier_top5 := true;
     v_verifier_top1 := true;
-  elsif v_player_name = 'artsonic' then
+  elsif v_player_name = 'artsonic' or v_gd_username = 'artsonic' then
     v_verifier_top1 := true;
   end if;
 
