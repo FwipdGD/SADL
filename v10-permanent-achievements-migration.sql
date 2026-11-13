@@ -123,10 +123,8 @@ security definer
 set search_path = public
 as $$
 begin
-  if new.rank_at_completion is null then
-    select rank into new.rank_at_completion
-    from public.levels where id = new.level_id;
-  end if;
+  -- The V9 before-trigger has already captured rank_at_completion.
+  -- Run this after the completion row exists so the new record is included.
   perform public.award_achievements_for_player(new.player_id);
   return new;
 end;
