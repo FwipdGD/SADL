@@ -18,9 +18,12 @@ create table if not exists public.levels (
   thumbnail_url text not null default '',
   showcase_url text not null default '',
   notes text not null default '',
+  tags text[] not null default '{}',
   created_at timestamptz not null default now(),
   constraint levels_rank_positive check (rank > 0)
 );
+
+alter table public.levels add column if not exists tags text[] not null default '{}';
 
 create table if not exists public.players (
   id uuid primary key default gen_random_uuid(),
