@@ -8,11 +8,6 @@ alter table public.levels
   add column if not exists tags text[] not null default '{}',
   add column if not exists min_percent integer not null default 50;
 
-alter table public.levels
-  drop constraint if exists levels_min_percent_valid;
-alter table public.levels
-  add constraint levels_min_percent_valid check (min_percent between 1 and 99);
-
 alter table public.level_submissions
   add column if not exists tags text[] not null default '{}';
 
