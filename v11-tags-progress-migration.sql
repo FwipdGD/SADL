@@ -11,10 +11,44 @@ alter table public.levels
 alter table public.levels
   drop constraint if exists levels_min_percent_valid;
 alter table public.levels
-  add constraint levels_min_percent_valid check (min_percent between 50 and 99);
+  add constraint levels_min_percent_valid check (min_percent between 1 and 99);
 
 alter table public.level_submissions
   add column if not exists tags text[] not null default '{}';
+
+-- Pointercrate allows level-specific thresholds below 50% (for example, some Main List levels have a 37% requirement).
+-- Update the existing record checks so qualifying progress can be submitted at the configured level threshold.
+alter table public.levels
+  drop constraint if exists levels_min_percent_valid;
+alter table public.levels
+  add constraint levels_min_percent_valid check (min_percent between 1 and 99);
+
+alter table public.level_runs
+  drop constraint if exists level_runs_percent_check;
+alter table public.level_runs
+  drop constraint if exists level_runs_percent_valid;
+alter table public.level_runs
+  add constraint level_runs_percent_valid check (percent between 1 and 99);
+
+alter table public.record_submissions
+  drop constraint if exists record_submission_percent_valid;
+alter table public.record_submissions
+  add constraint record_submission_percent_valid check (
+    (submission_type = 'completion' and percent is null)
+    or (submission_type = 'percent' and percent between 1 and 99)
+  );
+
+drop policy if exists "Anyone can submit records for review" on public.record_submissions;
+create policy "Anyone can submit records for review" on public.record_submissions
+  for insert to anon, authenticated
+  with check (
+    status = 'pending'
+    and length(btrim(proof_url)) > 0
+    and (
+      (submission_type = 'completion' and percent is null)
+      or (submission_type = 'percent' and percent between 1 and 99)
+    )
+  );
 
 alter table public.level_submissions
   drop constraint if exists level_submissions_tags_limit;
