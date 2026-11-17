@@ -298,7 +298,7 @@ function achievementCatalog(){
  ];
  return data.map((a,i)=>({id:i===0?'a16':'a'+(i+1),icon:a[0],title:a[1],desc:a[2],rarity:a[3],unlocked:a[4],secret:!!a[5]}));
 }
-function playerAchievements(p){if(db&&achievementStorageReady){const ids=new Set(achievementAwards.filter(x=>String(x.player_id)===String(p.id)).map(x=>String(x.achievement_id)));return achievementCatalog().filter(a=>ids.has(a.id))}return achievementCatalog().filter(a=>a.unlocked(p));}
+function playerAchievements(p){const catalog=achievementCatalog();if(db&&achievementStorageReady){const ids=new Set(achievementAwards.filter(x=>String(x.player_id)===String(p.id)).map(x=>String(x.achievement_id)));return catalog.filter(a=>ids.has(a.id)||a.unlocked(p))}return catalog.filter(a=>a.unlocked(p));}
 function renderAchievements(){
  const catalog=achievementCatalog();
  const norm=v=>String(v||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'');
