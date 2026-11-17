@@ -348,8 +348,24 @@ function renderActivityHistory(all){
   const oldRank=Number(previousRanks[id]),newRank=Number(currentRanks[id]);if(initialized&&oldRank>newRank&&oldRank>0){const passed=players.filter(q=>String(q.id)!==id&&Number(previousRanks[String(q.id)])<oldRank&&Number(currentRanks[String(q.id)])>newRank).map(q=>q.name);add(Date.now(),'<b>'+esc(p.name)+'</b> climbed to <b>#'+newRank+'</b>'+(passed.length?', overtaking '+passed.map(esc).join(', '):'')+'.','↑')}
  });
  const countryTotals={};players.forEach(p=>{const code=String(p.country_code||'').trim().toUpperCase();if(!/^[A-Z]{2}$/.test(code))return;countryTotals[code]=(countryTotals[code]||0)+score(p)});
- Object.entries(countryTotals).forEach(([code,points])=>{const before=old.__countries&&Number(old.__countries[code]||0);if(initialized){[250,500,1000,2500,5000,10000,25000].forEach(m=>{if(before<m&&points>=m){const name=(countryList.find(x=>x[0]===code)||[code,code])[1];add(Date.now(),'<b>'+esc(name)+'</b> reached <b>'+m.toLocaleString()+' combined points</b>.','🌍')}})});
- const seen=new Set(old.__records||[]);all.forEach(x=>{const r=x.row,id=String(r.id||[r.player_id,r.level_id,r.created_at,r.percent].join(':'));if(seen.has(id))return;seen.add(id);const p=players.find(p=>String(p.id)===String(r.player_id)),l=levels.find(l=>String(l.id)===String(r.level_id));if(l)add(r.created_at?new Date(r.created_at).getTime():Date.now(),'<b>'+esc(p?p.name:'A player')+'</b> '+(x.kind==='completion'?'completed':'reached '+esc(r.percent)+'% on')+' <b>'+esc(l.name)+'</b>.',x.kind==='completion'?'✓':'%')});
+ Object.entries(countryTotals).forEach(([code,points])=>{
+  const before=Number(old.__countries&&old.__countries[code]||0);
+  if(initialized){
+   [250,500,1000,2500,5000,10000,25000].forEach(m=>{
+    if(before<m&&points>=m){
+     const name=(countryList.find(x=>x[0]===code)||[code,code])[1];
+     add(Date.now(),'<b>'+esc(name)+'</b> reached <b>'+m.toLocaleString()+' combined points</b>.','🌍');
+    }
+   });
+  }
+ });
+ const seen=new Set(old.__records||[]);
+ all.forEach(x=>{
+  const r=x.row,id=String(r.id||[r.player_id,r.level_id,r.created_at,r.percent].join(':'));
+  if(seen.has(id))return;seen.add(id);if(!initialized)return;
+  const p=players.find(p=>String(p.id)===String(r.player_id)),l=levels.find(l=>String(l.id)===String(r.level_id));
+  if(l)add(r.created_at?new Date(r.created_at).getTime():Date.now(),'<b>'+esc(p?p.name:'A player')+'</b> '+(x.kind==='completion'?'completed':'reached '+esc(r.percent)+'% on')+' <b>'+esc(l.name)+'</b>.',x.kind==='completion'?'✓':'%');
+ });
  events.sort((a,b)=>b.date-a.date);$('activityFeed').innerHTML=events.length?events.slice(0,40).map(e=>'<div class="beta-event"><div class="event-icon">'+e.icon+'</div><div><p>'+e.html+'</p><small>'+esc(new Date(e.date).toLocaleString())+'</small></div></div>').join(''):'<p class="muted">No new news yet. New changes will appear here as this browser sees them.</p>';
  Object.keys(now).forEach(k=>old[k]=now[k]);old.__players=Object.fromEntries(players.map(p=>[String(p.id),score(p)]));old.__playerRanks=currentRanks;old.__countries=countryTotals;old.__records=Array.from(seen).slice(-500);old.__initialized=true;try{localStorage.setItem(key,JSON.stringify(old))}catch{}
 }
