@@ -11,6 +11,7 @@ set search_path = public
 as $$
 declare
   deleted_rank integer;
+  rank_offset integer;
 begin
   if auth.uid() is distinct from '2194f047-8bc8-4e67-a59d-6738694f5884'::uuid then
     raise exception 'Only the SA Demonlist owner can delete levels';
@@ -31,9 +32,18 @@ begin
   delete from public.level_runs where level_id = p_level_id;
   delete from public.levels where id = p_level_id;
 
+  -- Move affected rows above the current maximum first, avoiding
+  -- transient collisions with the unique levels_rank_key constraint.
+  select coalesce(max(rank), 0) + 1 into rank_offset
+  from public.levels;
+
   update public.levels
-  set rank = rank - 1
+  set rank = rank + rank_offset
   where rank > deleted_rank;
+
+  update public.levels
+  set rank = rank - rank_offset - 1
+  where rank > rank_offset;
 end;
 $$;
 
