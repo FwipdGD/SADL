@@ -343,7 +343,7 @@ function renderAchievements(){
  $('achievementBoard').innerHTML=['common','rare','epic','mythic'].map(r=>{const group=catalog.filter(a=>a.rarity===r);return '<h3 class="achievement-category" style="grid-column:1/-1">'+r+' · '+group.filter(a=>mine.has(a.id)).length+'/'+group.length+' unlocked</h3>'+group.map(a=>{const got=mine.has(a.id),unlockedAny=any(a);return '<div class="achievement-card '+(got?'earned':'locked')+'"><div class="achievement-icon">'+a.icon+'</div><div><b>'+esc(a.title)+'</b><small>'+esc(a.desc)+'</small><span class="rarity rarity-'+r+'">'+r+'</span><div class="achievement-player">'+(got?'✓ Unlocked by '+esc(chosen.name):unlockedAny?'Unlocked by another player':'Not unlocked')+'</div></div></div>'}).join('')}).join('');
 }
 function renderActivityHistory(all){
- const key='sadl-news-local-v1';let old={};try{old=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}const initialized=!!old.__initialized;const now={};const events=[];const add=(category,date,html,icon='↗')=>events.push({category,date:Number(date)||Date.now(),html,icon});
+ const key='sadl-news-local-v1';let old={};try{old=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}const initialized=!!old.__initialized;const now={};const events=Array.isArray(old.__newsEvents)?old.__newsEvents.slice():[];const add=(category,date,html,icon='↗')=>events.push({category,date:Number(date)||Date.now(),html,icon});
  const previousRanks=old.__playerRanks||{},currentRanks={};const board=players.map(p=>({p,points:score(p)})).sort((a,b)=>b.points-a.points||a.p.name.localeCompare(b.p.name));board.forEach((x,i)=>currentRanks[String(x.p.id)]=i+1);
  levels.forEach(l=>{
   const id=String(l.id),before=old[id],rank=Number(l.rank);now[id]={rank,name:l.name};
@@ -367,7 +367,7 @@ function renderActivityHistory(all){
  draw('listNewsFeed','list','<p class="muted">No new list updates yet.</p>');
  draw('playerNewsFeed','player','<p class="muted">No new player updates yet.</p>');
  draw('levelNewsFeed','level','<p class="muted">No level ranking changes detected yet. New placements and rank movements will appear here automatically.</p>');
- Object.keys(now).forEach(k=>old[k]=now[k]);old.__players=Object.fromEntries(players.map(p=>[String(p.id),score(p)]));old.__playerRanks=currentRanks;old.__countries=countryTotals;old.__records=Array.from(seen).slice(-500);old.__initialized=true;try{localStorage.setItem(key,JSON.stringify(old))}catch{}
+ Object.keys(now).forEach(k=>old[k]=now[k]);old.__players=Object.fromEntries(players.map(p=>[String(p.id),score(p)]));old.__playerRanks=currentRanks;old.__countries=countryTotals;old.__records=Array.from(seen).slice(-500);old.__newsEvents=events.slice(-100);old.__initialized=true;try{localStorage.setItem(key,JSON.stringify(old))}catch{}
 }
 function exportBackup(){const payload={exported_at:new Date().toISOString(),project:"SA Demonlist",levels,players,completions,level_runs:levelRuns};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="sadl-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000)}
 $("exportBackup").addEventListener("click",exportBackup);
