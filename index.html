@@ -169,6 +169,10 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 #levels .levelcell{position:relative;isolation:isolate;overflow:hidden;width:100%;box-sizing:border-box;background:#111521}
 #levels .levelcell:before{content:"";position:absolute;z-index:0;inset:0;background:var(--level-banner,transparent) center/cover no-repeat;opacity:.9;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 76%,rgba(0,0,0,.58) 90%,rgba(0,0,0,.2) 100%);mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 76%,rgba(0,0,0,.58) 90%,rgba(0,0,0,.2) 100%)}
 #levels .levelcell>*{position:relative;z-index:1}
+/* Preserve the original landscape thumbnail size and flex footprint */
+#levels .levelcell>.thumb{display:block!important;width:280px!important;height:158px!important;min-width:280px!important;max-width:280px!important;flex:0 0 280px!important;object-fit:cover}
+#levels .levelcell>.thumb.placeholder{width:280px!important;height:158px!important;min-width:280px!important;flex:0 0 280px!important}
+@media(max-width:700px){#levels .levelcell>.thumb{width:160px!important;height:90px!important;min-width:160px!important;max-width:160px!important;flex-basis:160px!important}#levels .levelcell>.thumb.placeholder{width:160px!important;height:90px!important;min-width:160px!important;flex-basis:160px!important}}
 #levels .levelcell .thumb{border:2px solid #596780;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 #levels .levelcell .thumb.placeholder{border:2px solid #596780}
 /* Live preview of the right-fading level banner in the level editor */
