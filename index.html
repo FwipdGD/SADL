@@ -165,9 +165,11 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 .compare-stat-row .compare-value-b{color:#f2d36f}
 @media(max-width:650px){.profile-compare-controls{grid-template-columns:1fr}.compare-arena{padding:13px}.compare-arena-head h3{font-size:19px}.compare-shared-chip{min-width:90px}.compare-player-card{padding:12px 8px}.compare-avatar{width:44px;height:44px}.compare-player-points{font-size:21px}.compare-stat-row{grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,.9fr);gap:5px;padding:10px 8px}.compare-stat-row b{font-size:11px}.compare-track-legend{font-size:9px}}
 
-/* Separate banner artwork behind the unchanged level box and thumbnail */
-#levels .levelcell{position:relative;isolation:isolate;overflow:hidden}
-#levels .levelcell:before{content:"";position:absolute;z-index:-1;inset:0;background:var(--level-banner,transparent) center/cover no-repeat;opacity:.9;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%)}
+/* Separate banner fills the complete level box; its right edge fades out gradually */
+#levels .levelcell{position:relative;isolation:isolate;overflow:hidden;background:#111521}
+#levels .levelcell:before{content:"";position:absolute;z-index:-1;inset:0;background:var(--level-banner,transparent) center/cover no-repeat;opacity:.9;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 46%,rgba(0,0,0,.9) 62%,rgba(0,0,0,.55) 82%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 46%,rgba(0,0,0,.9) 62%,rgba(0,0,0,.55) 82%,transparent 100%)}
+#levels .levelcell .thumb{border:2px solid #596780;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+#levels .levelcell .thumb.placeholder{border:2px solid #596780}
 /* Live preview of the right-fading level banner in the level editor */
 .level-banner-preview{position:relative;display:flex;align-items:center;min-height:124px;padding:18px 20px;overflow:hidden;isolation:isolate;border:1px solid #29344b;border-radius:9px;background:linear-gradient(90deg,#171b27,#111521 70%);color:#fff}
 .level-banner-preview-art{position:absolute;z-index:-1;inset:0;background-position:center 45%;background-size:cover;opacity:.78;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%)}
