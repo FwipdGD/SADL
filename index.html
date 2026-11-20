@@ -203,25 +203,16 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 }
 
 
-/* Podium colours: apply directly to rank text in all three leaderboards */
-#levels tbody tr:nth-child(1) td.rank,
-#levels tbody tr:nth-child(1) td.rank span,
-#board tbody tr:nth-child(1) td.rank,
-#board tbody tr:nth-child(1) td.rank span,
-#countryBoard tbody tr:nth-child(1) td.rank,
-#countryBoard tbody tr:nth-child(1) td.rank span{color:#ffd45c!important;text-shadow:0 0 9px rgba(255,212,92,.28)!important}
-#levels tbody tr:nth-child(2) td.rank,
-#levels tbody tr:nth-child(2) td.rank span,
-#board tbody tr:nth-child(2) td.rank,
-#board tbody tr:nth-child(2) td.rank span,
-#countryBoard tbody tr:nth-child(2) td.rank,
-#countryBoard tbody tr:nth-child(2) td.rank span{color:#d5deeb!important;text-shadow:0 0 8px rgba(213,222,235,.2)!important}
-#levels tbody tr:nth-child(3) td.rank,
-#levels tbody tr:nth-child(3) td.rank span,
-#board tbody tr:nth-child(3) td.rank,
-#board tbody tr:nth-child(3) td.rank span,
-#countryBoard tbody tr:nth-child(3) td.rank,
-#countryBoard tbody tr:nth-child(3) td.rank span{color:#d99a70!important;text-shadow:0 0 8px rgba(217,154,112,.2)!important}
+/* Podium colours: the IDs are on tbody elements, so target their rows directly */
+#levels tr:nth-child(1) td.rank,
+#board tr:nth-child(1) td.rank,
+#countryBoard tr:nth-child(1) td.rank{color:#ffd45c!important;text-shadow:0 0 9px rgba(255,212,92,.28)!important}
+#levels tr:nth-child(2) td.rank,
+#board tr:nth-child(2) td.rank,
+#countryBoard tr:nth-child(2) td.rank{color:#d5deeb!important;text-shadow:0 0 8px rgba(213,222,235,.2)!important}
+#levels tr:nth-child(3) td.rank,
+#board tr:nth-child(3) td.rank,
+#countryBoard tr:nth-child(3) td.rank{color:#d99a70!important;text-shadow:0 0 8px rgba(217,154,112,.2)!important}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
