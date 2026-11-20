@@ -165,68 +165,9 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 .compare-stat-row .compare-value-b{color:#f2d36f}
 @media(max-width:650px){.profile-compare-controls{grid-template-columns:1fr}.compare-arena{padding:13px}.compare-arena-head h3{font-size:19px}.compare-shared-chip{min-width:90px}.compare-player-card{padding:12px 8px}.compare-avatar{width:44px;height:44px}.compare-player-points{font-size:21px}.compare-stat-row{grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,.9fr);gap:5px;padding:10px 8px}.compare-stat-row b{font-size:11px}.compare-track-legend{font-size:9px}}
 
-/* SADL level banners — full-width artwork fading into the page on the right */
-#levels .levelcell{
-  position:relative;
-  display:flex;
-  align-items:center;
-  min-width:390px;
-  min-height:132px;
-  width:100%;
-  padding:18px 22px;
-  overflow:hidden;
-  isolation:isolate;
-  border:1px solid #29344b;
-  border-radius:8px;
-  background:linear-gradient(90deg,#171b27 0%,#111521 65%,transparent 100%);
-}
-#levels .levelcell .thumb{
-  position:absolute;
-  z-index:-1;
-  inset:0;
-  width:100%;
-  height:100%;
-  max-width:none;
-  object-fit:cover;
-  object-position:center 45%;
-  border:0;
-  border-radius:0;
-  opacity:.72;
-  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);
-  mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);
-}
-#levels .levelcell > div:not(.thumb){
-  position:relative;
-  z-index:1;
-  max-width:min(440px,75%);
-  padding:3px 0;
-  text-shadow:0 2px 8px #000,0 1px 2px #000;
-}
-#levels .levelcell .levelname{color:#fff;text-decoration-color:#f2c94c}
-#levels .levelcell .sub{color:#d4d9e5}
-#levels .levelcell .level-tags{max-width:100%}
-#levels .levelcell .placeholder{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-  border-radius:0;
-  background:linear-gradient(110deg,#242a38,#171c29 55%,#111521);
-  z-index:-1;
-}
-@media(max-width:700px){
-  #levels .levelcell{min-width:260px;min-height:94px;padding:12px 14px}
-  #levels .levelcell .thumb{width:100%;height:100%}
-  #levels .levelcell > div:not(.thumb){max-width:82%}
-}
-
-
-/* Separate right-fading banner artwork; normal thumbnails remain separate */
-#levels .levelcell{position:relative;isolation:isolate;overflow:hidden;min-width:300px;min-height:104px;padding:12px 14px}
-#levels .levelcell:before{content:"";position:absolute;z-index:-1;inset:0;background:var(--level-banner,linear-gradient(110deg,#242a38,#171c29 55%,#111521));background-position:center;background-size:cover;opacity:.9;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%)}
-#levels .levelcell .thumb{position:relative;z-index:1;width:76px;height:76px;object-fit:cover;flex:none;border:1px solid #46516a;border-radius:6px}
-#levels .levelcell .thumb.placeholder{display:grid;place-items:center;background:#242a38;font-size:10px;color:#aab2c4}
+/* Separate banner artwork behind the unchanged level box and thumbnail */
+#levels .levelcell{position:relative;isolation:isolate;overflow:hidden}
+#levels .levelcell:before{content:"";position:absolute;z-index:-1;inset:0;background:var(--level-banner,transparent) center/cover no-repeat;opacity:.9;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%)}
 /* Live preview of the right-fading level banner in the level editor */
 .level-banner-preview{position:relative;display:flex;align-items:center;min-height:124px;padding:18px 20px;overflow:hidden;isolation:isolate;border:1px solid #29344b;border-radius:9px;background:linear-gradient(90deg,#171b27,#111521 70%);color:#fff}
 .level-banner-preview-art{position:absolute;z-index:-1;inset:0;background-position:center 45%;background-size:cover;opacity:.78;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.82) 52%,transparent 100%)}
