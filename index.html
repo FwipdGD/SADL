@@ -485,7 +485,7 @@ function openPlayerProfile(playerId){
  $("profileContent").innerHTML='<p class="muted">Loading player profile…</p>';$("profileModal").classList.add("open");
  let wins=completions.filter(c=>String(c.player_id)===String(p.id)).map(c=>({c,l:levels.find(l=>String(l.id)===String(c.level_id))})).filter(x=>x.l).sort((a,b)=>a.l.rank-b.l.rank);
  let country=String(p.country_code||'').trim().toUpperCase();
- let best={};levelRuns.filter(r=>String(r.player_id)===String(p.id)&&!completions.some(c=>String(c.player_id)===String(p.id)&&String(c.level_id)===String(r.level_id))).forEach(r=>{let l=levels.find(x=>String(x.id)===String(r.level_id));if(!qualifiesForDisplay(l,r))return;if(!best[r.level_id]||Number(r.percent)>Number(best[r.level_id].percent))best[r.level_id]=r});
+ let best={};levelRuns.filter(r=>String(r.player_id)===String(p.id)&&!completions.some(c=>String(c.player_id)===String(p.id)&&String(c.level_id)===String(r.level_id))).forEach(r=>{let l=levels.find(x=>String(x.id)===String(r.level_id));if(!qualifiesForProgress(l,r.percent))return;if(!best[r.level_id]||Number(r.percent)>Number(best[r.level_id].percent))best[r.level_id]=r});
  let runs=Object.values(best).map(r=>({r,l:levels.find(l=>String(l.id)===String(r.level_id))})).filter(x=>x.l).sort((a,b)=>b.r.percent-a.r.percent);
  let board=players.map(q=>({p:q,points:score(q),n:completions.filter(c=>String(c.player_id)===String(q.id)).length})).sort((a,b)=>b.points-a.points||b.n-a.n||a.p.name.localeCompare(b.p.name));let position=board.findIndex(x=>String(x.p.id)===String(p.id))+1;
  let recent=wins.slice().sort((a,b)=>new Date(b.c.created_at||0)-new Date(a.c.created_at||0)).slice(0,5);
