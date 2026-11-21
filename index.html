@@ -527,8 +527,24 @@ function refreshCompareRivalOptions(){
 $("compareRivalToggle").addEventListener("click",()=>{const panel=$("compareRivalPanel");panel.classList.toggle("hidden");if(!panel.classList.contains("hidden"))refreshCompareRivalOptions()});
 $("comparePrimaryPlayer").addEventListener("change",refreshCompareRivalOptions);$("compareRivalPlayer").addEventListener("change",refreshCompareRivalOptions);
 $("compareRivalRun").addEventListener("click",()=>{const a=$("comparePrimaryPlayer").value,b=$("compareRivalPlayer").value;if(!a||!b||a===b)return;renderPlayerComparison(a,b)});
-document.addEventListener("click",e=>{const name=e.target.closest("[data-player-profile]");if(name){e.preventDefault();openPlayerProfile(name.dataset.playerProfile)}});
-document.addEventListener("keydown",e=>{const name=e.target.closest("[data-player-profile]");if(name&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openPlayerProfile(name.dataset.playerProfile)}});
+// Player profile activation runs in the capture phase so clicks still reach it even if a nested component stops bubbling.
+function findPlayerProfileTarget(event){
+ const target=event.target instanceof Element?event.target:event.target?.parentElement;
+ return target?.closest?.("[data-player-profile]")||null;
+}
+window.addEventListener("click",e=>{
+ const name=findPlayerProfileTarget(e);
+ if(!name)return;
+ e.preventDefault();
+ openPlayerProfile(name.dataset.playerProfile);
+},true);
+window.addEventListener("keydown",e=>{
+ const name=findPlayerProfileTarget(e);
+ if(name&&(e.key==="Enter"||e.key===" ")){
+  e.preventDefault();
+  openPlayerProfile(name.dataset.playerProfile);
+ }
+},true);
 
 let countryMapZoom=null,countryMapSvg=null,countryMapLoaded=false;
 function showCountryMap(){$("countryListView").classList.add("hidden");$("countryMapView").classList.remove("hidden");if(!countryMapLoaded)loadCountryMap()}
