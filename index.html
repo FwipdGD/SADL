@@ -799,14 +799,15 @@ function wheelDraw(){
   }
   ctx.restore();
 
-  // The label is centred on the slice's tangent. Its available width is
-  // calculated from the actual chord at the label radius, so it stays inside
-  // its own wedge as the selected-level count changes.
-  const labelRadius=r*.73;
+  // Keep each label inside its own wedge, nearer the wheel centre.
+  // The clipping path is the same sector used for the thumbnail, so text can
+  // never cross a divider even when the selected-level count changes.
+  const labelRadius=r*.58;
   const chord=Math.max(0,2*labelRadius*Math.sin(slice/2));
-  const maxWidth=chord*.88;
+  const maxWidth=chord*.9;
   let name=String(level.name||"Unnamed level").trim();
   ctx.save();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
   ctx.translate(cx+Math.cos(mid)*labelRadius,cy+Math.sin(mid)*labelRadius);
   let rotation=mid+Math.PI/2;
   if(Math.cos(mid)<0)rotation+=Math.PI;
@@ -816,10 +817,8 @@ function wheelDraw(){
   while(ctx.measureText(name).width>maxWidth&&name.length>3){
    name=name.slice(0,-2).trimEnd()+"…";
   }
-  ctx.beginPath();ctx.moveTo(-maxWidth/2,-readableFont*.9);ctx.lineTo(maxWidth/2,-readableFont*.9);
-  ctx.lineTo(maxWidth/2,readableFont*.9);ctx.lineTo(-maxWidth/2,readableFont*.9);ctx.closePath();ctx.clip();
   ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.lineWidth=Math.max(2,readableFont*.22);ctx.strokeStyle="rgba(0,0,0,.95)";
+  ctx.lineWidth=Math.max(2,readableFont*.22);ctx.strokeStyle="rgba(0,0,0,.98)";
   ctx.strokeText(name,0,0,maxWidth);ctx.fillStyle="#fff";ctx.fillText(name,0,0,maxWidth);
   ctx.restore();
 
