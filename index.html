@@ -872,7 +872,8 @@ function wheelSpin(){
  const items=wheelFilteredLevels();if(!items.length)return;
  wheelSpinning=true;$("wheelSpinButton").disabled=true;$("wheelResult").classList.add("hidden");
  const chosenIndex=Math.floor(Math.random()*items.length),slice=Math.PI*2/items.length;
- const desired=-Math.PI/2-(chosenIndex+.5)*slice;
+ // The pointer is fixed at the right-hand edge (angle 0), so align the chosen slice centre to angle 0.
+  const desired=-(chosenIndex+.5)*slice;
  const target=desired+Math.ceil((wheelRotation+Math.PI*2*6-desired)/(Math.PI*2))*Math.PI*2;
  const start=wheelRotation,delta=target-start,duration=5600,started=performance.now();
  function frame(now){
