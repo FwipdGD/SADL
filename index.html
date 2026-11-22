@@ -801,25 +801,26 @@ function wheelDraw(){
 
   // AREDL-style radial label: the text runs from the outer part of
   // the wedge inward toward the hub, not sideways across the wheel.
-  const labelRadius=r*.78;
-  const inwardLength=r*.56;
-  const widthAtLabel=2*(labelRadius-inwardLength*.48)*Math.sin(slice/2);
-  const maxThickness=Math.max(7,widthAtLabel*.72);
+  const labelRadius=r*.82;
+  const inwardLength=r*.64;
+  const widthAtLabel=2*(labelRadius-inwardLength*.5)*Math.sin(slice/2);
+  const maxThickness=Math.max(7,widthAtLabel*.78);
   let name=String(level.name||"Unnamed level").trim();
   ctx.save();
   ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
   ctx.translate(cx+Math.cos(mid)*labelRadius,cy+Math.sin(mid)*labelRadius);
+  // Positive local X points toward the hub after this rotation.
   ctx.rotate(mid+Math.PI);
-  let readableFont=Math.min(28,maxThickness,inwardLength/Math.max(2,name.length*.62));
+  let readableFont=Math.min(32,maxThickness,inwardLength/Math.max(2,name.length*.62));
   readableFont=Math.max(8,readableFont);
   ctx.font="800 "+readableFont+"px system-ui";
   while(ctx.measureText(name).width>inwardLength&&name.length>3){
    name=name.slice(0,-2).trimEnd()+"…";
   }
-  ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.textAlign="left";ctx.textBaseline="middle";
   ctx.lineWidth=Math.max(2,readableFont*.2);ctx.strokeStyle="rgba(0,0,0,.98)";
-  ctx.strokeText(name,-inwardLength*.5,0,inwardLength);
-  ctx.fillStyle="#fff";ctx.fillText(name,-inwardLength*.5,0,inwardLength);
+  ctx.strokeText(name,0,0,inwardLength);
+  ctx.fillStyle="#fff";ctx.fillText(name,0,0,inwardLength);
   ctx.restore();
 
   // Divider follows the exact radial edge of this slice.
