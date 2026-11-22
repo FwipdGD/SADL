@@ -263,6 +263,53 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 .section-tabs button{font-size:13px!important;padding:11px 18px!important;min-height:48px}
 #wheel{scroll-margin-top:82px}
 @media(max-width:700px){.hero-wheel-launch{gap:9px}#openWheelButton{width:100%;min-height:56px;font-size:17px}.section-tabs button{font-size:13px!important;padding:10px 13px!important}}
+
+/* AREDL-style wheel layout and single-line section navigation */
+#sectionTabs{display:flex!important;flex-wrap:nowrap!important;gap:5px!important;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin;overscroll-behavior-x:contain}
+#sectionTabs button{flex:0 0 auto!important;min-width:max-content!important;font-size:13px!important;padding:10px 13px!important;min-height:48px!important}
+#wheel{padding:0 0 22px;overflow:visible}
+.wheel-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px 12px}
+.wheel-heading h2{font-size:clamp(27px,3vw,38px);margin:0;letter-spacing:-.8px}
+.wheel-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(390px,1fr);gap:24px;padding:0 22px 22px;align-items:start}
+.wheel-left{min-width:0;display:flex;flex-direction:column;align-items:center}
+.wheel-stage{position:relative;width:100%;display:grid;place-items:center;padding:8px 28px 8px 8px;overflow:visible}
+#wheelCanvas{display:block;width:min(100%,620px);height:auto;aspect-ratio:1;border-radius:50%;filter:drop-shadow(0 12px 28px #0009);max-width:100%}
+.wheel-pointer{position:absolute;z-index:3;top:50%;right:3px;left:auto;transform:translateY(-50%);width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-right:38px solid #ff7800;filter:drop-shadow(0 3px 5px #000b)}
+.wheel-actions{width:100%;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 8px 18px}
+#wheelSpinButton{min-width:190px;min-height:54px;font-size:16px;letter-spacing:.6px;background:#ff7800;border-color:#ff7800;color:#fff}
+.wheel-count{font-size:13px;color:var(--muted)}
+.wheel-list-panel{min-width:0;min-height:590px;padding:16px 18px 14px;border:1px solid #37373d;border-radius:9px;background:#1a1a1e;display:flex;flex-direction:column}
+.wheel-search-row{display:flex;align-items:center;gap:10px;max-width:100%;margin:0 auto 12px;width:min(100%,360px)}
+.wheel-search{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 12px;background:#111115;border-radius:13px;color:#777}
+.wheel-search span{font-size:26px;line-height:1}
+.wheel-search input{border:0;background:transparent;min-height:54px;padding:8px 0;outline:none}
+#wheelFilterToggle{font-size:24px;background:transparent;border:0;color:#85858c;padding:4px 8px;min-width:42px}
+.wheel-list-actions{display:flex;justify-content:flex-end;gap:10px;margin-bottom:18px}
+#wheelSelectAll,#wheelClearSelection{font-size:12px;min-height:38px;padding:7px 13px;border:0;background:#ff7800;color:#fff;border-radius:7px;font-weight:800}
+#wheelClearSelection{background:#f10b0b}
+.wheel-level-list{min-height:385px;overflow:auto;scrollbar-width:thin}
+.wheel-level-row{display:grid;grid-template-columns:minmax(0,1fr) 88px 22px;align-items:center;gap:12px;min-height:48px;padding:5px 12px;border-bottom:1px solid #ffffff08;cursor:pointer}
+.wheel-level-row:hover{background:#ffffff08}
+.wheel-level-name{font-size:15px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wheel-weight{display:flex;justify-content:space-between;gap:8px;color:#777;font-size:12px;font-variant-numeric:tabular-nums}
+.wheel-weight small{font-size:11px;color:#626269}
+.wheel-level-row input{appearance:auto;width:16px;min-width:16px;min-height:16px;height:16px;accent-color:#ff7800;cursor:pointer}
+.wheel-list-empty{padding:25px;text-align:center;color:var(--muted)}
+.wheel-pagination{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:10px 0 0}
+.wheel-pagination button{min-width:34px;min-height:36px;padding:5px 10px;border-radius:6px;background:transparent;border:1px solid #414147;font-size:13px}
+.wheel-pagination button.active{background:#ff7800;border-color:#ff7800;color:#fff}
+.wheel-pagination button:disabled{opacity:.4}
+.wheel-page-dots{color:#888;padding:0 2px}
+.wheel-filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0 14px;margin-bottom:10px;border-bottom:1px solid #333}
+.wheel-filters label{display:flex;align-items:center;gap:7px;color:#aaa;font-size:11px;font-weight:800}
+.wheel-filters select{width:auto;min-width:120px;max-width:160px;background:#111115}
+.wheel-tags{display:flex;gap:5px;flex-wrap:wrap;max-height:110px;overflow:auto}
+.wheel-tag{min-height:30px;padding:4px 8px;font-size:11px;background:#22232a;border-color:#45454b}
+.wheel-result{width:100%;margin:0 0 14px;padding:14px;gap:10px;flex-wrap:wrap}
+.wheel-result-main strong{font-size:18px}
+.wheel-empty{padding:12px;text-align:center;color:var(--muted)}
+@media(max-width:950px){.wheel-layout{grid-template-columns:1fr}.wheel-left{max-width:620px;margin:0 auto;width:100%}.wheel-list-panel{min-height:500px}.wheel-level-list{min-height:300px}}
+@media(max-width:700px){.wheel-heading{padding:16px;align-items:flex-start;flex-direction:column}.wheel-layout{padding:0 12px 14px;gap:14px}.wheel-list-panel{padding:12px;min-height:0}.wheel-level-row{grid-template-columns:minmax(0,1fr) 78px 22px;padding:5px 6px}.wheel-level-name{font-size:13px}.wheel-stage{padding:8px 24px 8px 0}.wheel-pointer{right:0;border-top-width:14px;border-bottom-width:14px;border-right-width:28px}.wheel-pagination{gap:4px}.wheel-pagination button{min-width:30px;padding:4px 7px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -270,35 +317,34 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 
 <header><div class="wrap nav"><div class="logo">SA <em>DEMONLIST</em></div><div class="spacer"></div><div class="auth"><input id="email" type="email" placeholder="Member email" aria-label="Member email"><button id="signin" class="primary">Sign in</button><button id="signout" class="hidden">Sign out</button></div></div></header>
 <main class="wrap">
-<section class="hero"><h1>SA <span>Demonlist.</span></h1><p class="muted" style="color:#f2d36f;font-weight:800">BETA V5 — NEW ACHIEVEMENTS & PLAYER FILTERS</p><p class="intro">A community-ranked list of the hardest demons our crew plays. Add records, earn points, and climb the player leaderboard.</p><div class="stats"><div class="stat"><b id="levelCount">0</b><span>Ranked levels</span></div><div class="stat"><b id="completionCount">0</b><span>Completions</span></div><div class="stat"><b id="playerCount">0</b><span>Players</span></div></div><div class="muted" id="connection">Loading…</div><div class="hero-wheel-launch"><button type="button" class="primary" id="openWheelButton"><span aria-hidden="true">🎡</span> OPEN THE WHEEL</button><span>Let SADL decide your next demon</span></div></section>
+<section class="hero"><h1>SA <span>Demonlist.</span></h1><p class="intro">A community-ranked list of the hardest demons our crew plays. Add records, earn points, and climb the player leaderboard.</p><div class="stats"><div class="stat"><b id="levelCount">0</b><span>Ranked levels</span></div><div class="stat"><b id="completionCount">0</b><span>Completions</span></div><div class="stat"><b id="playerCount">0</b><span>Players</span></div></div><div class="muted" id="connection">Loading…</div><div class="hero-wheel-launch"><button type="button" class="primary" id="openWheelButton"><span aria-hidden="true">🎡</span> OPEN THE WHEEL</button><span>Let SADL decide your next demon</span></div></section>
 <nav class="section-tabs" id="sectionTabs" aria-label="Demonlist sections"><button type="button" class="active" data-section="list">LEVELS</button><button type="button" data-section="news">NEWS</button><button type="button" data-section="timeMachine">TIME MACHINE</button><button type="button" data-section="players">PLAYERS</button><button type="button" data-section="countries">COUNTRIES</button><button type="button" data-section="records">SUBMIT A RECORD</button><button type="button" data-section="manage">SUBMIT A LEVEL</button><button type="button" data-section="scoring">RULES</button><button type="button" data-section="achievements">ACHIEVEMENTS</button><button type="button" data-section="packs">LEVEL PACKS</button></nav>
 
 <section class="panel section tab-panel" id="wheel">
- <div class="wheel-intro">
-  <div class="eyebrow">SADL RANDOM LEVEL PICKER</div>
-  <h2>THE <span>WHEEL</span></h2>
-  <p class="muted">Every level on the list gets a slice. Filter the list, spin the wheel, and see what SADL gives you.</p>
+ <div class="wheel-heading">
+  <div><div class="eyebrow">SADL RANDOM LEVEL PICKER</div><h2>WHEEL SPINNER</h2><p class="muted">Select levels, spin the wheel, and let fate decide.</p></div>
+  <button type="button" id="wheelBackButton">← BACK TO LEVELS</button>
  </div>
- <div class="wheel-toolbar">
-  <label for="wheelStatusFilter">COMPLETION <select id="wheelStatusFilter"><option value="all">All levels</option><option value="beaten">Beaten</option><option value="unbeaten">Unbeaten</option></select></label>
-  <label for="wheelPlayerFilter">COMPLETIONS FOR <select id="wheelPlayerFilter"><option value="any">Any player</option></select></label>
-  <button type="button" id="wheelClearFilters">Clear filters</button>
+ <div class="wheel-layout">
+  <div class="wheel-left">
+   <div class="wheel-stage"><div class="wheel-pointer" aria-hidden="true"></div><canvas id="wheelCanvas" width="900" height="900" aria-label="Random level wheel"></canvas></div>
+   <div class="wheel-actions"><button type="button" class="primary" id="wheelSpinButton">SPIN THE WHEEL</button><span class="wheel-count" id="wheelCount">Loading levels…</span></div>
+   <div id="wheelResult" class="wheel-result hidden" aria-live="polite"><img id="wheelResultImage" alt="" /><div class="wheel-result-main"><small>THE WHEEL HAS CHOSEN</small><strong id="wheelResultName"></strong><span class="muted" id="wheelResultMeta"></span></div><button type="button" class="primary" id="wheelViewLevel">VIEW LEVEL</button></div>
+   <div id="wheelEmpty" class="wheel-empty hidden">Select at least one level to spin.</div>
+  </div>
+  <div class="wheel-list-panel">
+   <div class="wheel-search-row"><label class="wheel-search"><span aria-hidden="true">⌕</span><input id="wheelSearch" type="search" placeholder="Search levels…" autocomplete="off"></label><button type="button" id="wheelFilterToggle" aria-expanded="false" title="Filters">▽</button></div>
+   <div id="wheelFilters" class="wheel-filters hidden">
+    <label>COMPLETION <select id="wheelStatusFilter"><option value="all">All levels</option><option value="beaten">Beaten</option><option value="unbeaten">Unbeaten</option></select></label>
+    <label>PLAYER <select id="wheelPlayerFilter"><option value="any">Any player</option></select></label>
+    <div id="wheelTagFilters" class="wheel-tags" aria-label="Filter wheel by level tags"></div>
+    <button type="button" id="wheelClearFilters">Clear filters</button>
+   </div>
+   <div class="wheel-list-actions"><button type="button" id="wheelSelectAll">Select All</button><button type="button" id="wheelClearSelection">Clear All</button></div>
+   <div id="wheelLevelList" class="wheel-level-list"></div>
+   <div id="wheelPagination" class="wheel-pagination"></div>
+  </div>
  </div>
- <div id="wheelTagFilters" class="wheel-tags" aria-label="Filter wheel by level tags"></div>
- <div class="wheel-stage">
-  <div class="wheel-pointer" aria-hidden="true"></div>
-  <canvas id="wheelCanvas" width="720" height="720" aria-label="Random level wheel"></canvas>
- </div>
- <div class="wheel-actions">
-  <button type="button" class="primary" id="wheelSpinButton">SPIN THE WHEEL</button>
-  <span class="wheel-count" id="wheelCount">Loading levels…</span>
- </div>
- <div id="wheelResult" class="wheel-result hidden" aria-live="polite">
-  <img id="wheelResultImage" alt="" />
-  <div class="wheel-result-main"><small>THE WHEEL HAS CHOSEN</small><strong id="wheelResultName"></strong><span class="muted" id="wheelResultMeta"></span></div>
-  <button type="button" class="primary" id="wheelViewLevel">VIEW LEVEL</button>
- </div>
- <div id="wheelEmpty" class="wheel-empty hidden">No levels match those filters. Try clearing a filter.</div>
 </section>
 
 
@@ -670,10 +716,10 @@ function renderPacks(){
  host.innerHTML=packs.map(p=>{const names=Array.isArray(p.level_names)?p.level_names:[];const first=names.length?findLevel(names[0]):null;const cover=first?thumbnailFor(first):"";const fallback=first&&youtubeId(first.showcase_url)?"https://img.youtube.com/vi/"+encodeURIComponent(youtubeId(first.showcase_url))+"/hqdefault.jpg":"";return '<article class="demo-pack" style="position:relative;overflow:hidden;border:1px solid var(--line);background:#10131c;border-radius:12px"><div style="height:150px;position:relative;background:linear-gradient(0deg,rgba(8,9,14,.96),rgba(8,9,14,.12)),url(\''+esc(cover)+'\') center/cover no-repeat;background-color:#20222c" data-pack-open="'+esc(p.id)+'" role="button" tabindex="0" aria-label="Open '+esc(p.name)+'"></div><div style="padding:14px 16px"><div style="display:flex;align-items:start;gap:10px;justify-content:space-between"><div>'+(p.category?'<span class="pill">'+esc(p.category)+'</span>':"")+'<h3 style="margin:5px 0 4px">'+esc(p.name)+'</h3></div>'+(isAdmin()?'<div class="btnrow"><button type="button" data-pack-edit="'+esc(p.id)+'">Edit</button><button type="button" data-pack-delete="'+esc(p.id)+'">Delete</button></div>':"")+'</div><p class="muted">'+esc(p.description||"")+'</p><button type="button" data-pack-open="'+esc(p.id)+'">View '+names.length+' levels →</button></div></article>'}).join("");
 }
 
-let wheelSelectedTags=new Set(),wheelRotation=-Math.PI/2,wheelSpinning=false,wheelChosen=null,wheelImages={};
+let wheelSelectedTags=new Set(),wheelSelectedIds=null,wheelCurrentPage=1,wheelPageSize=9,wheelRotation=-Math.PI/2,wheelSpinning=false,wheelChosen=null,wheelImages={};
 const wheelPalette=["#293b59","#49345f","#27534f","#60452e","#3e4268","#6a3447","#31546a","#61502b"];
 function wheelNormalizedTag(value){let raw=String(value??"");if(raw==="timings")raw="precision";let found=TAG_DEFS.find(t=>t.id===raw||t.name.toLowerCase()===raw.toLowerCase());return found?found.id:raw}
-function wheelFilteredLevels(){
+function wheelAvailableLevels(){
  const status=$("wheelStatusFilter")?.value||"all",player=$("wheelPlayerFilter")?.value||"any";
  return ordered().filter(l=>{
   if(status!=="all"){
@@ -688,52 +734,77 @@ function wheelFilteredLevels(){
   return true;
  });
 }
+function wheelFilteredLevels(){const available=wheelAvailableLevels();return wheelSelectedIds===null?available:available.filter(l=>wheelSelectedIds.has(String(l.id)))}
 function wheelDraw(){
  const canvas=$("wheelCanvas");if(!canvas)return;
- const ctx=canvas.getContext("2d"),w=canvas.width,cx=w/2,cy=w/2,r=w/2-9,items=wheelFilteredLevels();
+ const ctx=canvas.getContext("2d"),w=canvas.width,cx=w/2,cy=w/2,r=w/2-10,items=wheelFilteredLevels();
  ctx.clearRect(0,0,w,w);
- if(!items.length){ctx.fillStyle="#151923";ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#aab4c8";ctx.font="bold 24px system-ui";ctx.textAlign="center";ctx.fillText("NO LEVELS",cx,cy);return}
+ if(!items.length){ctx.fillStyle="#17191f";ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#aab4c8";ctx.font="bold 28px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SELECT LEVELS",cx,cy);return}
  const slice=Math.PI*2/items.length;
  items.forEach((level,i)=>{
   const start=wheelRotation+i*slice,end=start+slice,mid=start+slice/2;
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();
-  ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fill();
-  ctx.strokeStyle="#0c1019";ctx.lineWidth=3;ctx.stroke();
-  const thumb=thumbnailFor(level);
-  let img=wheelImages[String(level.id)];
-  if(thumb&&!img){img=new Image();wheelImages[String(level.id)]=img;img.onload=()=>wheelDraw();img.onerror=()=>{wheelImages[String(level.id)]=null};img.src=thumb}
   ctx.save();
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-3,start,end);ctx.closePath();ctx.clip();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
+  const thumb=thumbnailFor(level),key=String(level.id);
+  let img=wheelImages[key];
+  if(thumb&&!img){
+   img=new Image();wheelImages[key]=img;
+   img.onload=()=>wheelDraw();
+   img.onerror=()=>{wheelImages[key]=false;wheelDraw()};
+   img.src=thumb;
+  }
+  const band=Math.max(18,2*r*Math.tan(slice/2));
   if(img&&img.complete&&img.naturalWidth){
-   // Lay the level artwork along the full radial slice, clipped to its exact wedge.
-   const band=Math.max(24,2*r*Math.sin(slice/2)*1.18);
-   ctx.translate(cx,cy);ctx.rotate(mid);
-   ctx.drawImage(img,0,-band/2,r-4,band);
-   ctx.fillStyle="#00000018";ctx.fillRect(0,-band/2,r-4,band);
+   ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
+   ctx.drawImage(img,0,-band/2,r-2,band);
+   ctx.fillStyle="rgba(0,0,0,.30)";ctx.fillRect(0,-band/2,r-2,band);
+   ctx.restore();
   }else{
-   ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fill();
-   ctx.translate(cx+Math.cos(mid)*r*.58,cy+Math.sin(mid)*r*.58);ctx.rotate(mid+Math.PI/2);
-   ctx.fillStyle="#fff";ctx.font="bold 11px system-ui";ctx.textAlign="center";ctx.fillText(String(level.name||"Level").slice(0,18),0,0,100);
+   ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fillRect(cx-r,cy-r,w,w);
   }
   ctx.restore();
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
+  const labelRadius=r*.59,maxWidth=Math.max(32,2*labelRadius*Math.tan(slice/2)*.88);
+  let fontSize=Math.max(10,Math.min(22,maxWidth/Math.max(5,String(level.name||"Level").length)*1.65));
+  ctx.font="900 "+fontSize+"px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.lineJoin="round";ctx.lineWidth=Math.max(3,fontSize*.28);ctx.strokeStyle="rgba(0,0,0,.88)";
+  ctx.strokeText(String(level.name||"Level"),labelRadius,0,maxWidth);
+  ctx.fillStyle="#fff";ctx.shadowColor="#000";ctx.shadowBlur=5;ctx.fillText(String(level.name||"Level"),labelRadius,0,maxWidth);
+  ctx.restore();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.strokeStyle="#090b10";ctx.lineWidth=3;ctx.stroke();
  });
- ctx.beginPath();ctx.arc(cx,cy,r*.16,0,Math.PI*2);ctx.fillStyle="#10131c";ctx.fill();ctx.lineWidth=8;ctx.strokeStyle="#d6b45b";ctx.stroke();
- ctx.fillStyle="#f6d77d";ctx.font="900 20px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SADL",cx,cy);
+ ctx.beginPath();ctx.arc(cx,cy,r*.14,0,Math.PI*2);ctx.fillStyle="#11131a";ctx.fill();ctx.lineWidth=8;ctx.strokeStyle="#d6b45b";ctx.stroke();
+ ctx.fillStyle="#f6d77d";ctx.font="900 24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SADL",cx,cy);
 }
 function wheelRenderTags(){
  const host=$("wheelTagFilters");if(!host)return;
  host.innerHTML=TAG_DEFS.map(t=>'<button type="button" class="wheel-tag '+(wheelSelectedTags.has(t.id)?"active":"")+'" data-wheel-tag="'+esc(t.id)+'" aria-pressed="'+wheelSelectedTags.has(t.id)+'">'+t.icon+' '+esc(t.name)+'</button>').join("");
 }
+function wheelRenderList(){
+ const host=$("wheelLevelList"),pager=$("wheelPagination");if(!host||!pager)return;
+ const query=String($("wheelSearch")?.value||"").trim().toLowerCase();
+ const available=wheelAvailableLevels().filter(l=>!query||String(l.name||"").toLowerCase().includes(query)||String(l.rank||"").includes(query));
+ const pages=Math.max(1,Math.ceil(available.length/wheelPageSize));wheelCurrentPage=Math.min(wheelCurrentPage,pages);
+ const pageItems=available.slice((wheelCurrentPage-1)*wheelPageSize,wheelCurrentPage*wheelPageSize);
+ host.innerHTML=pageItems.map(l=>'<label class="wheel-level-row"><span class="wheel-level-name">#'+esc(l.rank)+' '+esc(l.name)+'</span><span class="wheel-weight"><small>Weight</small>1.00</span><input type="checkbox" data-wheel-level="'+esc(l.id)+'" '+(wheelSelectedIds===null||wheelSelectedIds.has(String(l.id))?'checked':'')+' aria-label="Include '+esc(l.name)+'"></label>').join("")||'<div class="wheel-list-empty">No matching levels.</div>';
+ const buttons=[];
+ buttons.push('<button type="button" data-wheel-page="'+Math.max(1,wheelCurrentPage-1)+'" '+(wheelCurrentPage===1?'disabled':'')+'>Previous</button>');
+ const pageSet=new Set([1,pages,wheelCurrentPage-1,wheelCurrentPage,wheelCurrentPage+1]);
+ let last=0;
+ [...pageSet].filter(n=>n>=1&&n<=pages).sort((a,b)=>a-b).forEach(n=>{if(n-last>1)buttons.push('<span class="wheel-page-dots">…</span>');buttons.push('<button type="button" class="'+(n===wheelCurrentPage?'active':'')+'" data-wheel-page="'+n+'">'+n+'</button>');last=n});
+ buttons.push('<button type="button" data-wheel-page="'+Math.min(pages,wheelCurrentPage+1)+'" '+(wheelCurrentPage===pages?'disabled':'')+'>Next</button>');
+ pager.innerHTML=buttons.join("");
+}
 function renderWheel(){
- const player=$("wheelPlayerFilter"),status=$("wheelStatusFilter");
- if(!player||!status)return;
+ const player=$("wheelPlayerFilter"),status=$("wheelStatusFilter");if(!player||!status)return;
  const previous=player.value||"any";
  player.innerHTML='<option value="any">Any player</option>'+players.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name))).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.name)+'</option>').join("");
  if([...player.options].some(o=>o.value===previous))player.value=previous;
  else {const mine=players.find(p=>String(p.name||"").toLowerCase()==="fwipgd");player.value=mine?String(mine.id):"any"}
- wheelRenderTags();
+ if(wheelSelectedIds===null)wheelSelectedIds=new Set(levels.map(l=>String(l.id)));
+ wheelRenderTags();wheelRenderList();
  const items=wheelFilteredLevels(),count=$("wheelCount"),empty=$("wheelEmpty"),canvas=$("wheelCanvas"),spin=$("wheelSpinButton");
- if(count)count.textContent=items.length+" of "+levels.length+" levels in the wheel";
+ if(count)count.textContent=items.length+" selected";
  if(empty)empty.classList.toggle("hidden",items.length>0);
  if(canvas)canvas.classList.toggle("hidden",items.length===0);
  if(spin)spin.disabled=items.length===0||wheelSpinning;
@@ -762,10 +833,17 @@ function wheelSpin(){
  }
  requestAnimationFrame(frame);
 }
-$("openWheelButton").addEventListener("click",()=>{showSection("wheel");$("wheel").scrollIntoView({behavior:"smooth",block:"start"})});
+$("openWheelButton").addEventListener("click",()=>{showSection("wheel");renderWheel();$("wheel").scrollIntoView({behavior:"smooth",block:"start"})});
+$("wheelBackButton").addEventListener("click",()=>{showSection("list");$("list").scrollIntoView({behavior:"smooth",block:"start"})});
 $("wheelSpinButton").addEventListener("click",wheelSpin);
-$("wheelStatusFilter").addEventListener("change",renderWheel);
-$("wheelPlayerFilter").addEventListener("change",renderWheel);
+$("wheelSearch").addEventListener("input",()=>{wheelCurrentPage=1;wheelRenderList()});
+$("wheelLevelList").addEventListener("change",e=>{const box=e.target.closest("[data-wheel-level]");if(!box)return;if(wheelSelectedIds===null)wheelSelectedIds=new Set(levels.map(l=>String(l.id)));if(box.checked)wheelSelectedIds.add(String(box.dataset.wheelLevel));else wheelSelectedIds.delete(String(box.dataset.wheelLevel));const count=$("wheelCount");if(count)count.textContent=wheelFilteredLevels().length+" selected";$("wheelSpinButton").disabled=wheelFilteredLevels().length===0||wheelSpinning;$("wheelResult").classList.add("hidden");wheelDraw()});
+$("wheelPagination").addEventListener("click",e=>{const b=e.target.closest("[data-wheel-page]");if(!b||b.disabled)return;wheelCurrentPage=Number(b.dataset.wheelPage)||1;wheelRenderList()});
+$("wheelSelectAll").addEventListener("click",()=>{if(wheelSelectedIds===null)wheelSelectedIds=new Set();wheelAvailableLevels().forEach(l=>wheelSelectedIds.add(String(l.id)));renderWheel()});
+$("wheelClearSelection").addEventListener("click",()=>{wheelSelectedIds=new Set();renderWheel()});
+$("wheelFilterToggle").addEventListener("click",()=>{const panel=$("wheelFilters"),open=panel.classList.contains("hidden");panel.classList.toggle("hidden",!open);$("wheelFilterToggle").setAttribute("aria-expanded",String(open))});
+$("wheelStatusFilter").addEventListener("change",()=>{wheelCurrentPage=1;renderWheel()});
+$("wheelPlayerFilter").addEventListener("change",()=>{wheelCurrentPage=1;renderWheel()});
 $("wheelClearFilters").addEventListener("click",()=>{wheelSelectedTags.clear();$("wheelStatusFilter").value="all";$("wheelPlayerFilter").value="any";renderWheel()});
 $("wheelTagFilters").addEventListener("click",e=>{const b=e.target.closest("[data-wheel-tag]");if(!b||wheelSpinning)return;const tag=b.dataset.wheelTag;if(wheelSelectedTags.has(tag))wheelSelectedTags.delete(tag);else wheelSelectedTags.add(tag);renderWheel()});
 $("wheelViewLevel").addEventListener("click",()=>{if(wheelChosen)openDetails(wheelChosen.id)});
