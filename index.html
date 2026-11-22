@@ -766,29 +766,32 @@ function wheelDraw(){
    img.onerror=()=>{wheelImages[key]=false;wheelDraw()};
    img.src=thumb;
   }
-  const band=Math.max(24,2*r*Math.sin(slice/2)*1.08);
   if(img&&img.complete&&img.naturalWidth){
-   ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
-   // Overscan the image to cover the full wedge, including its outer curved edge.
-   const coverW=r*1.08,coverH=band*1.08;
-   const scale=Math.max(coverW/img.naturalWidth,coverH/img.naturalHeight);
+   // Each slice gets a full-size, centre-cropped level thumbnail (not a thin radial strip).
+   const scale=Math.max(w/img.naturalWidth,w/img.naturalHeight);
    const drawW=img.naturalWidth*scale,drawH=img.naturalHeight*scale;
-   ctx.drawImage(img,-drawW*.04,-drawH/2,drawW,drawH);
-   ctx.fillStyle="rgba(0,0,0,.38)";ctx.fillRect(0,-band/2,r+8,band);
-   ctx.restore();
+   ctx.drawImage(img,cx-drawW/2,cy-drawH/2,drawW,drawH);
+   ctx.fillStyle="rgba(0,0,0,.46)";ctx.fillRect(cx-r,cy-r,w,w);
   }else{
-   ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fillRect(cx-r,cy-r,w,w);
+   // Keep every wedge visually filled even when that level has no supplied artwork.
+   const grad=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);
+   const base=wheelPalette[i%wheelPalette.length];
+   grad.addColorStop(0,base);grad.addColorStop(1,"#10131d");
+   ctx.fillStyle=grad;ctx.fillRect(cx-r,cy-r,w,w);
+   ctx.strokeStyle="rgba(255,255,255,.10)";ctx.lineWidth=2;
+   for(let k=-w;k<w*2;k+=34){ctx.beginPath();ctx.moveTo(k,cy-r);ctx.lineTo(k-w,cy+r);ctx.stroke()}
   }
   ctx.restore();
   ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
-  const labelRadius=r*.62,maxWidth=Math.max(44,2*labelRadius*Math.tan(slice/2)*.94);
-  const label=String(level.name||"Level");
-  let fontSize=Math.max(15,Math.min(32,maxWidth/Math.max(4,label.length)*2.05));
-  while(fontSize>15){ctx.font="900 "+fontSize+"px system-ui";if(ctx.measureText(label).width<=maxWidth)break;fontSize-=1}
-  ctx.font="900 "+fontSize+"px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.lineJoin="round";ctx.lineWidth=Math.max(4,fontSize*.32);ctx.strokeStyle="rgba(0,0,0,.96)";
-  ctx.strokeText(label,labelRadius,0,maxWidth);
-  ctx.fillStyle="#fff";ctx.shadowColor="#000";ctx.shadowBlur=7;ctx.fillText(label,labelRadius,0,maxWidth);
+  // Run the title down the centre of the slice so it uses the slice's radial length.
+  ctx.translate(r*.56,0);ctx.rotate(Math.PI/2);
+  const label=String(level.name||"Level"),maxWidth=r*.78;
+  let fontSize=Math.min(42,Math.max(15,maxWidth/Math.max(4,label.length)*1.65));
+  while(fontSize>15){ctx.font="950 "+fontSize+"px system-ui";if(ctx.measureText(label).width<=maxWidth)break;fontSize-=1}
+  ctx.font="950 "+fontSize+"px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.lineJoin="round";ctx.lineWidth=Math.max(4,fontSize*.3);ctx.strokeStyle="rgba(0,0,0,.98)";
+  ctx.strokeText(label,0,0,maxWidth);
+  ctx.fillStyle="#fff";ctx.shadowColor="#000";ctx.shadowBlur=9;ctx.fillText(label,0,0,maxWidth);
   ctx.restore();
   ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.strokeStyle="#090b10";ctx.lineWidth=3;ctx.stroke();
  });
