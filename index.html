@@ -747,7 +747,7 @@ function wheelDraw(){
   ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
   const thumb=thumbnailFor(level),key=String(level.id);
   let img=wheelImages[key];
-  if(thumb&&!img){
+  if(thumb&&img===undefined){
    img=new Image();wheelImages[key]=img;
    img.onload=()=>wheelDraw();
    img.onerror=()=>{wheelImages[key]=false;wheelDraw()};
