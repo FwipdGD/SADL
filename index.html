@@ -115,6 +115,7 @@ body[data-view="list"][data-section="records"] #records,#activity,#stats{display
 .empty{padding:26px}.foot{border-color:#252d40}
 body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-section="players"] #players,body[data-view="list"][data-section="countries"] #countries,body[data-view="list"][data-section="scoring"] #scoring,body[data-view="list"][data-section="manage"] #manage,body[data-view="list"][data-section="stats"] #stats,body[data-view="list"][data-section="news"] #news ,body[data-view="list"][data-section="timeMachine"] #timeMachine{display:block!important}
 @media(max-width:700px){.wrap{padding:0 12px}.hero{padding-top:24px}.section-tabs{display:flex;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.section-tabs button{white-space:nowrap;padding:8px 12px}.beta-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.beta-stat{padding:12px}.beta-stat b{font-size:25px}#board .levelname{font-size:20px!important}.levelcell{min-width:330px}.thumb{width:160px;height:90px}.stats-leader-head{align-items:flex-start}}
+.news-unread-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-left:7px;border-radius:50%;background:#f2c94c;color:#17140b;font-size:13px;font-weight:1000;line-height:1;box-shadow:0 0 9px #f2c94c66;vertical-align:middle}.news-unread-badge.hidden{display:none!important}
 .news-subtabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 15px;padding-bottom:12px;border-bottom:1px solid var(--line)}.news-subtabs button{font-size:11px;font-weight:900;letter-spacing:.7px;padding:9px 13px}.news-subtabs button.active{background:#292516;color:#f6dc8b;border-color:#615326;box-shadow:inset 0 -2px 0 #f2c94c}.news-category-panel{min-width:0}.news-category-panel .beta-event{background:#0d111a}.news-category-panel .beta-event p{line-height:1.55}.news-category-panel .beta-event small{display:block;margin-top:5px}@media(max-width:520px){.news-subtabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.news-subtabs button{padding:8px 5px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
@@ -402,7 +403,7 @@ const countryList=[["AF","Afghanistan"],["AL","Albania"],["DZ","Algeria"],["AR",
 function flag(code){if(!code)return "🌐";if(code==="XK")return "🇽🇰";return String.fromCodePoint(...code.toUpperCase().split("").map(c=>127397+c.charCodeAt(0)))} function flagHTML(code){if(!code)return "";let c=String(code).toLowerCase();if(!/^[a-z]{2}$/.test(c))return "";return `<img class="country-flag" src="https://flagcdn.com/24x18/${c}.png" srcset="https://flagcdn.com/48x36/${c}.png 2x" alt="${esc(code)} flag" loading="lazy">`}
 $("playerCountry").innerHTML='<option value="">Select country (optional)</option>'+countryList.map(([c,n])=>`<option value="${c}">${flag(c)} ${n}</option>`).join("");
 const view="list";document.body.dataset.view=view;document.body.dataset.section="list";
-function showSection(name){if(!["list","news","timeMachine","players","countries","manage","records","scoring","achievements","packs","wheel"].includes(name))name="list";document.body.dataset.section=name;document.querySelectorAll("#sectionTabs [data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));var recordPanel=document.getElementById("records");if(recordPanel){recordPanel.style.setProperty("display",name==="records"?"block":"none","important");recordPanel.style.setProperty("visibility",name==="records"?"visible":"hidden","important");recordPanel.style.setProperty("grid-column",name==="records"?"1 / -1":"auto");}var lower=document.querySelector(".lower");if(lower&&name==="records")lower.style.setProperty("display","block","important");else if(lower)lower.style.removeProperty("display");if(name==="achievements")renderAchievements();if(name==="timeMachine")loadTimeMachine();if(name==="wheel")renderWheel();}
+function showSection(name){if(!["list","news","timeMachine","players","countries","manage","records","scoring","achievements","packs","wheel"].includes(name))name="list";document.body.dataset.section=name;document.querySelectorAll("#sectionTabs [data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===name));var recordPanel=document.getElementById("records");if(recordPanel){recordPanel.style.setProperty("display",name==="records"?"block":"none","important");recordPanel.style.setProperty("visibility",name==="records"?"visible":"hidden","important");recordPanel.style.setProperty("grid-column",name==="records"?"1 / -1":"auto");}var lower=document.querySelector(".lower");if(lower&&name==="records")lower.style.setProperty("display","block","important");else if(lower)lower.style.removeProperty("display");if(name==="achievements")renderAchievements();if(name==="timeMachine")loadTimeMachine();if(name==="wheel")renderWheel();if(name==="news"){const active=document.querySelector("#newsSubtabs [data-news-view].active");markNewsRead(active?.dataset.newsView||"list")}}
 document.getElementById("sectionTabs").addEventListener("click",e=>{const b=e.target.closest("[data-section]");if(b)showSection(b.dataset.section)});
 let timeMachineSnapshots=[];
 async function loadTimeMachine(){
@@ -435,7 +436,24 @@ async function saveTimeMachineSnapshot(){
  const {error}=await db.rpc("save_sadl_history_snapshot",{p_levels:savedLevels,p_players:savedPlayers});
  if(error)console.warn("Time Machine snapshot not saved:",error.message);
 }
-function showNewsCategory(name){if(!["list","player","level"].includes(name))name="list";document.querySelectorAll("#newsSubtabs [data-news-view]").forEach(b=>b.classList.toggle("active",b.dataset.newsView===name));document.querySelectorAll("#news .news-category-panel").forEach(p=>p.classList.toggle("hidden",p.id!==name+"NewsPanel"))}
+const newsCategories=["list","player","level"],newsReadKey="sadl-news-read-v1";
+function newsItems(category){const host=document.getElementById(category+"NewsStatic");return host?[...host.querySelectorAll(":scope > .beta-event")]:[]}
+function newsItemKey(node){return (node.dataset.date||"")+"|"+(node.querySelector("p")?.textContent||node.textContent||"").trim()}
+function refreshNewsUnread(){
+ let read={};try{read=JSON.parse(localStorage.getItem(newsReadKey)||"{}")||{}}catch{}
+ let total=0;
+ newsCategories.forEach(category=>{
+  const items=newsItems(category),seen=new Set(Array.isArray(read[category])?read[category]:[]),unread=items.filter(node=>!seen.has(newsItemKey(node))).length;total+=unread;
+  const button=document.querySelector('#newsSubtabs [data-news-view="'+category+'"]');if(button){let badge=button.querySelector(".news-unread-badge");if(!badge){badge=document.createElement("span");badge.className="news-unread-badge";badge.textContent="!";badge.setAttribute("aria-label","Unread news");button.appendChild(badge)}badge.classList.toggle("hidden",unread===0);badge.title=unread?unread+" unread news item"+(unread===1?"":"s"):""}
+ });
+ const mainButton=document.querySelector('#sectionTabs [data-section="news"]');if(mainButton){let badge=mainButton.querySelector(".news-unread-badge");if(!badge){badge=document.createElement("span");badge.className="news-unread-badge";badge.textContent="!";badge.setAttribute("aria-label","Unread news");mainButton.appendChild(badge)}badge.classList.toggle("hidden",total===0);badge.title=total?total+" unread news item"+(total===1?"":"s"):""}
+}
+function markNewsRead(category){
+ let read={};try{read=JSON.parse(localStorage.getItem(newsReadKey)||"{}")||{}}catch{}
+ read[category]=newsItems(category).map(newsItemKey);try{localStorage.setItem(newsReadKey,JSON.stringify(read))}catch{}
+ refreshNewsUnread();
+}
+function showNewsCategory(name){if(!newsCategories.includes(name))name="list";document.querySelectorAll("#newsSubtabs [data-news-view]").forEach(b=>b.classList.toggle("active",b.dataset.newsView===name));document.querySelectorAll("#news .news-category-panel").forEach(p=>p.classList.toggle("hidden",p.id!==name+"NewsPanel"));markNewsRead(name)}
 document.getElementById("newsSubtabs").addEventListener("click",e=>{const b=e.target.closest("[data-news-view]");if(b)showNewsCategory(b.dataset.newsView)});
 
 const samples=[{id:"demo1",name:"Bloodbath",creator:"Riot",difficulty:"Extreme Demon",rank:1,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo2",name:"Acu",creator:"Neigefeu",difficulty:"Extreme Demon",rank:2,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"},{id:"demo3",name:"Nine Circles",creator:"Zobros",difficulty:"Hard Demon",rank:3,thumbnail_url:"",showcase_url:"",notes:"Example entry — replace with your crew's ranking"}];
@@ -606,6 +624,7 @@ function renderActivityHistory(all){
  sortNewsCategory('listNewsStatic','listNewsFeed');
  sortNewsCategory('playerNewsStatic','playerNewsFeed');
  sortNewsCategory('levelNewsStatic','levelNewsFeed');
+  refreshNewsUnread();
  Object.keys(now).forEach(k=>old[k]=now[k]);old.__players=Object.fromEntries(players.map(p=>[String(p.id),score(p)]));old.__playerRanks=currentRanks;old.__countries=countryTotals;old.__records=Array.from(seen).slice(-500);old.__newsEvents=events.slice(-100);old.__initialized=true;try{localStorage.setItem(key,JSON.stringify(old))}catch{}
 }
 function exportBackup(){const payload={exported_at:new Date().toISOString(),project:"SA Demonlist",levels,players,completions,level_runs:levelRuns};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="sadl-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000)}
