@@ -748,6 +748,30 @@ function wheelAvailableLevels(){
  });
 }
 function wheelFilteredLevels(){const available=wheelAvailableLevels();return wheelSelectedIds===null?available:available.filter(l=>wheelSelectedIds.has(String(l.id)))}
+function wheelImageSources(level){
+ const id=youtubeId(level.showcase_url);
+ return [...new Set([
+  url(level.thumbnail_url),
+  url(level.banner_url),
+  id?"https://img.youtube.com/vi/"+encodeURIComponent(id)+"/maxresdefault.jpg":"",
+  id?"https://img.youtube.com/vi/"+encodeURIComponent(id)+"/hqdefault.jpg":""
+ ].filter(Boolean))];
+}
+function wheelLoadImage(level){
+ const key=String(level.id),sources=wheelImageSources(level);
+ let entry=wheelImages[key];
+ if(entry&&entry.sources.join("|")===sources.join("|"))return entry;
+ entry={sources,index:0,img:null,failed:false};wheelImages[key]=entry;
+ const tryNext=()=>{
+  if(entry.index>=entry.sources.length){entry.failed=true;wheelDraw();return}
+  const img=new Image();entry.img=img;
+  img.onload=()=>wheelDraw();
+  img.onerror=()=>{entry.index++;tryNext()};
+  img.src=entry.sources[entry.index];
+ };
+ if(sources.length)tryNext();else entry.failed=true;
+ return entry;
+}
 function wheelDraw(){
  const canvas=$("wheelCanvas");if(!canvas)return;
  const ctx=canvas.getContext("2d"),w=canvas.width,cx=w/2,cy=w/2,r=w/2-10,items=wheelFilteredLevels();
@@ -759,46 +783,50 @@ function wheelDraw(){
  const slice=Math.PI*2/items.length;
  items.forEach((level,i)=>{
   const start=wheelRotation+i*slice,end=start+slice,mid=start+slice/2;
-  const thumb=thumbnailFor(level),key=String(level.id);
-  let cached=wheelImages[key];
-  if(thumb&&(!cached||cached.src!==thumb)){
-   const img=new Image();cached=wheelImages[key]=img;
-   img.onload=()=>wheelDraw();
-   img.onerror=()=>{wheelImages[key]=null;wheelDraw()};
-   img.src=thumb;
-  }
-  // Draw exactly one level image inside this slice. The clip is reset for
-  // every level so artwork cannot spill into neighbouring wedges.
+  const entry=wheelLoadImage(level),img=entry&&entry.img;
+  // Each thumbnail is independently cover-cropped across the full wheel face,
+  // then clipped to this exact, selection-sized sector.
   ctx.save();
   ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
   ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fillRect(0,0,w,w);
-  if(cached&&cached.complete&&cached.naturalWidth>0){
-   const scale=Math.max(w/cached.naturalWidth,w/cached.naturalHeight);
-   const dw=cached.naturalWidth*scale,dh=cached.naturalHeight*scale;
-   ctx.drawImage(cached,cx-dw/2,cy-dh/2,dw,dh);
-   ctx.fillStyle="rgba(0,0,0,.34)";ctx.fillRect(0,0,w,w);
+  if(img&&img.complete&&img.naturalWidth>0){
+   const scale=Math.max(w/img.naturalWidth,w/img.naturalHeight);
+   const dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;
+   ctx.drawImage(img,cx-dw/2,cy-dh/2,dw,dh);
+   ctx.fillStyle="rgba(0,0,0,.30)";ctx.fillRect(0,0,w,w);
   }else{
-   ctx.fillStyle="rgba(10,13,20,.72)";ctx.fillRect(0,0,w,w);
+   ctx.fillStyle="rgba(10,13,20,.66)";ctx.fillRect(0,0,w,w);
   }
   ctx.restore();
-  // Slice separator.
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(start)*(r-2),cy+Math.sin(start)*(r-2));
-  ctx.strokeStyle="#f0f2f8";ctx.globalAlpha=.72;ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1;
-  // Put the level name inside its own wedge, following the wheel's curve.
-  ctx.save();ctx.translate(cx+Math.cos(mid)*r*.66,cy+Math.sin(mid)*r*.66);
+
+  // The label is centred on the slice's tangent. Its available width is
+  // calculated from the actual chord at the label radius, so it stays inside
+  // its own wedge as the selected-level count changes.
+  const labelRadius=r*.73;
+  const chord=Math.max(0,2*labelRadius*Math.sin(slice/2));
+  const maxWidth=chord*.88;
+  let name=String(level.name||"Unnamed level").trim();
+  ctx.save();
+  ctx.translate(cx+Math.cos(mid)*labelRadius,cy+Math.sin(mid)*labelRadius);
   let rotation=mid+Math.PI/2;
   if(Math.cos(mid)<0)rotation+=Math.PI;
   ctx.rotate(rotation);
-  const maxWidth=Math.max(62,r*slice*.78);
-  let name=String(level.name||"Unnamed level");
-  ctx.font="700 20px system-ui";
-  while(ctx.measureText(name).width>maxWidth&&name.length>7){name=name.slice(0,-2)+"…"}
+  const readableFont=Math.max(9,Math.min(28,maxWidth/Math.max(2,name.length*.57)));
+  ctx.font="800 "+readableFont+"px system-ui";
+  while(ctx.measureText(name).width>maxWidth&&name.length>3){
+   name=name.slice(0,-2).trimEnd()+"…";
+  }
+  ctx.beginPath();ctx.moveTo(-maxWidth/2,-readableFont*.9);ctx.lineTo(maxWidth/2,-readableFont*.9);
+  ctx.lineTo(maxWidth/2,readableFont*.9);ctx.lineTo(-maxWidth/2,readableFont*.9);ctx.closePath();ctx.clip();
   ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.lineWidth=5;ctx.strokeStyle="rgba(0,0,0,.9)";ctx.strokeText(name,0,0,maxWidth);
-  ctx.fillStyle="#fff";ctx.fillText(name,0,0,maxWidth);
+  ctx.lineWidth=Math.max(2,readableFont*.22);ctx.strokeStyle="rgba(0,0,0,.95)";
+  ctx.strokeText(name,0,0,maxWidth);ctx.fillStyle="#fff";ctx.fillText(name,0,0,maxWidth);
   ctx.restore();
+
+  // Divider follows the exact radial edge of this slice.
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(start)*(r-2),cy+Math.sin(start)*(r-2));
+  ctx.strokeStyle="#f5f5f5";ctx.globalAlpha=.82;ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1;
  });
- // Outer rim and centre hub.
  ctx.beginPath();ctx.arc(cx,cy,r-2,0,Math.PI*2);ctx.strokeStyle="#101116";ctx.lineWidth=5;ctx.stroke();
  ctx.beginPath();ctx.arc(cx,cy,r*.14,0,Math.PI*2);ctx.fillStyle="#11131a";ctx.fill();
  ctx.lineWidth=8;ctx.strokeStyle="#d6b45b";ctx.stroke();
