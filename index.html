@@ -599,8 +599,6 @@ function renderActivityHistory(all){
  sortNewsCategory('listNewsStatic','listNewsFeed');
  sortNewsCategory('playerNewsStatic','playerNewsFeed');
  sortNewsCategory('levelNewsStatic','levelNewsFeed');
- // Keep the static List News tab sorted too, including its original announcements.
- sortNewsCategory('listNewsStatic','listNewsFeed');
  Object.keys(now).forEach(k=>old[k]=now[k]);old.__players=Object.fromEntries(players.map(p=>[String(p.id),score(p)]));old.__playerRanks=currentRanks;old.__countries=countryTotals;old.__records=Array.from(seen).slice(-500);old.__newsEvents=events.slice(-100);old.__initialized=true;try{localStorage.setItem(key,JSON.stringify(old))}catch{}
 }
 function exportBackup(){const payload={exported_at:new Date().toISOString(),project:"SA Demonlist",levels,players,completions,level_runs:levelRuns};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="sadl-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000)}
