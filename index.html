@@ -752,34 +752,54 @@ function wheelDraw(){
  const canvas=$("wheelCanvas");if(!canvas)return;
  const ctx=canvas.getContext("2d"),w=canvas.width,cx=w/2,cy=w/2,r=w/2-10,items=wheelFilteredLevels();
  ctx.clearRect(0,0,w,w);
- if(!items.length){ctx.fillStyle="#17191f";ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#aab4c8";ctx.font="bold 28px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SELECT LEVELS",cx,cy);return}
+ if(!items.length){
+  ctx.fillStyle="#17191f";ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#aab4c8";ctx.font="bold 28px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SELECT LEVELS",cx,cy);return;
+ }
  const slice=Math.PI*2/items.length;
  items.forEach((level,i)=>{
-  const start=wheelRotation+i*slice,end=start+slice;
-  ctx.save();
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
+  const start=wheelRotation+i*slice,end=start+slice,mid=start+slice/2;
   const thumb=thumbnailFor(level),key=String(level.id);
-  let img=wheelImages[key];
-  if(thumb&&(!img||img.src!==thumb)){
-   img=new Image();wheelImages[key]=img;
+  let cached=wheelImages[key];
+  if(thumb&&(!cached||cached.src!==thumb)){
+   const img=new Image();cached=wheelImages[key]=img;
    img.onload=()=>wheelDraw();
-   img.onerror=()=>{wheelImages[key]=false;wheelDraw()};
+   img.onerror=()=>{wheelImages[key]=null;wheelDraw()};
    img.src=thumb;
   }
-  if(img&&img.complete&&img.naturalWidth){
-   // Crop the level artwork to the wheel's square before the wedge clip is applied.
-   const scale=Math.max(w/img.naturalWidth,w/img.naturalHeight);
-   const drawW=img.naturalWidth*scale,drawH=img.naturalHeight*scale;
-   ctx.drawImage(img,cx-drawW/2,cy-drawH/2,drawW,drawH);
-   ctx.fillStyle="rgba(0,0,0,.12)";ctx.fillRect(cx-r,cy-r,w,w);
+  // Draw exactly one level image inside this slice. The clip is reset for
+  // every level so artwork cannot spill into neighbouring wedges.
+  ctx.save();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.clip();
+  ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fillRect(0,0,w,w);
+  if(cached&&cached.complete&&cached.naturalWidth>0){
+   const scale=Math.max(w/cached.naturalWidth,w/cached.naturalHeight);
+   const dw=cached.naturalWidth*scale,dh=cached.naturalHeight*scale;
+   ctx.drawImage(cached,cx-dw/2,cy-dh/2,dw,dh);
+   ctx.fillStyle="rgba(0,0,0,.34)";ctx.fillRect(0,0,w,w);
   }else{
-   ctx.fillStyle="#17191f";ctx.fillRect(cx-r,cy-r,w,w);
+   ctx.fillStyle="rgba(10,13,20,.72)";ctx.fillRect(0,0,w,w);
   }
   ctx.restore();
-  // Clean separators only: no labels painted over the artwork.
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();
-  ctx.strokeStyle="#101116";ctx.lineWidth=3;ctx.stroke();
+  // Slice separator.
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(start)*(r-2),cy+Math.sin(start)*(r-2));
+  ctx.strokeStyle="#f0f2f8";ctx.globalAlpha=.72;ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1;
+  // Put the level name inside its own wedge, following the wheel's curve.
+  ctx.save();ctx.translate(cx+Math.cos(mid)*r*.66,cy+Math.sin(mid)*r*.66);
+  let rotation=mid+Math.PI/2;
+  if(Math.cos(mid)<0)rotation+=Math.PI;
+  ctx.rotate(rotation);
+  const maxWidth=Math.max(62,r*slice*.78);
+  let name=String(level.name||"Unnamed level");
+  ctx.font="700 20px system-ui";
+  while(ctx.measureText(name).width>maxWidth&&name.length>7){name=name.slice(0,-2)+"…"}
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.lineWidth=5;ctx.strokeStyle="rgba(0,0,0,.9)";ctx.strokeText(name,0,0,maxWidth);
+  ctx.fillStyle="#fff";ctx.fillText(name,0,0,maxWidth);
+  ctx.restore();
  });
+ // Outer rim and centre hub.
+ ctx.beginPath();ctx.arc(cx,cy,r-2,0,Math.PI*2);ctx.strokeStyle="#101116";ctx.lineWidth=5;ctx.stroke();
  ctx.beginPath();ctx.arc(cx,cy,r*.14,0,Math.PI*2);ctx.fillStyle="#11131a";ctx.fill();
  ctx.lineWidth=8;ctx.strokeStyle="#d6b45b";ctx.stroke();
  ctx.fillStyle="#f6d77d";ctx.font="900 24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SADL",cx,cy);
