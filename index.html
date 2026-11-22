@@ -310,6 +310,19 @@ body[data-view="list"][data-section="list"] #list,body[data-view="list"][data-se
 .wheel-empty{padding:12px;text-align:center;color:var(--muted)}
 @media(max-width:950px){.wheel-layout{grid-template-columns:1fr}.wheel-left{max-width:620px;margin:0 auto;width:100%}.wheel-list-panel{min-height:500px}.wheel-level-list{min-height:300px}}
 @media(max-width:700px){.wheel-heading{padding:16px;align-items:flex-start;flex-direction:column}.wheel-layout{padding:0 12px 14px;gap:14px}.wheel-list-panel{padding:12px;min-height:0}.wheel-level-row{grid-template-columns:minmax(0,1fr) 78px 22px;padding:5px 6px}.wheel-level-name{font-size:13px}.wheel-stage{padding:8px 24px 8px 0}.wheel-pointer{right:0;border-top-width:14px;border-bottom-width:14px;border-right-width:28px}.wheel-pagination{gap:4px}.wheel-pagination button{min-width:30px;padding:4px 7px}}
+
+/* Wheel typography and image coverage refinement */
+#wheelCanvas{width:min(100%,700px)!important;max-width:700px!important}
+.wheel-stage{padding:8px 30px 8px 8px!important}
+.wheel-level-name{font-size:17px!important;font-weight:750!important}
+.wheel-level-row{min-height:54px!important}
+.wheel-heading h2{font-size:clamp(30px,3.4vw,42px)!important}
+.wheel-search input{font-size:17px!important}
+.wheel-list-actions button,.wheel-pagination button{font-size:14px!important}
+.wheel-filters label{font-size:13px!important}
+.wheel-tag{font-size:13px!important;padding:6px 10px!important}
+#wheelSpinButton{font-size:18px!important;min-height:58px!important}
+@media(max-width:700px){.wheel-stage{padding:8px 26px 8px 0!important}.wheel-level-name{font-size:15px!important}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -374,7 +387,7 @@ const configured=SUPABASE_URL.startsWith("https://")&&!SUPABASE_URL.includes("PA
 const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const url=s=>{try{let u=new URL(s);return ["http:","https:"].includes(u.protocol)?u.href:""}catch{return ""}};
 function youtubeId(s){try{let u=new URL(s);if(u.hostname==="youtu.be")return u.pathname.split("/").filter(Boolean)[0]||"";if(["youtube.com","www.youtube.com","m.youtube.com","music.youtube.com"].includes(u.hostname)){if(u.pathname==="/watch")return u.searchParams.get("v")||"";let m=u.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/);return m?m[1]:""}}catch{}return ""}
-function thumbnailFor(l){let direct=url(l.thumbnail_url);if(direct)return direct;let id=youtubeId(l.showcase_url);return id?"https://img.youtube.com/vi/"+encodeURIComponent(id)+"/hqdefault.jpg":""}
+function thumbnailFor(l){let direct=url(l.thumbnail_url);if(direct)return direct;let banner=url(l.banner_url);if(banner)return banner;let id=youtubeId(l.showcase_url);return id?"https://img.youtube.com/vi/"+encodeURIComponent(id)+"/hqdefault.jpg":""}
 const ADMIN_ID="2194f047-8bc8-4e67-a59d-6738694f5884";let db=configured&&window.supabase?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null,session=null,member=null,levels=[],players=[],completions=[],levelRuns=[],pendingRecords=[],pendingLevelSubmissions=[],editing=null,editingPlayer=null,selectedLevelTags=[];
 let packs=[],editingPack=null,selectedPackId=null,achievementAwards=[],achievementStorageReady=false;let previousRankSnapshot={};try{previousRankSnapshot=JSON.parse(localStorage.getItem("sadl_beta_last_rank_snapshot")||"{}")}catch{}let rankSnapshotSaved=false;
 function rankMovement(id,currentRank){let previous=previousRankSnapshot[String(id)];if(!previous||Number(previous)===Number(currentRank))return "";let delta=Number(previous)-Number(currentRank);return '<span class="rank-movement '+(delta>0?'rank-up':'rank-down')+'" title="Rank '+(delta>0?'improved':'dropped')+' since your last visit">'+(delta>0?'↑ '+delta:'↓ '+Math.abs(delta))+'</span>'}
@@ -753,23 +766,29 @@ function wheelDraw(){
    img.onerror=()=>{wheelImages[key]=false;wheelDraw()};
    img.src=thumb;
   }
-  const band=Math.max(18,2*r*Math.tan(slice/2));
+  const band=Math.max(24,2*r*Math.sin(slice/2)*1.08);
   if(img&&img.complete&&img.naturalWidth){
    ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
-   ctx.drawImage(img,0,-band/2,r-2,band);
-   ctx.fillStyle="rgba(0,0,0,.30)";ctx.fillRect(0,-band/2,r-2,band);
+   // Overscan the image to cover the full wedge, including its outer curved edge.
+   const coverW=r*1.08,coverH=band*1.08;
+   const scale=Math.max(coverW/img.naturalWidth,coverH/img.naturalHeight);
+   const drawW=img.naturalWidth*scale,drawH=img.naturalHeight*scale;
+   ctx.drawImage(img,-drawW*.04,-drawH/2,drawW,drawH);
+   ctx.fillStyle="rgba(0,0,0,.38)";ctx.fillRect(0,-band/2,r+8,band);
    ctx.restore();
   }else{
    ctx.fillStyle=wheelPalette[i%wheelPalette.length];ctx.fillRect(cx-r,cy-r,w,w);
   }
   ctx.restore();
   ctx.save();ctx.translate(cx,cy);ctx.rotate(mid);
-  const labelRadius=r*.59,maxWidth=Math.max(32,2*labelRadius*Math.tan(slice/2)*.88);
-  let fontSize=Math.max(10,Math.min(22,maxWidth/Math.max(5,String(level.name||"Level").length)*1.65));
+  const labelRadius=r*.62,maxWidth=Math.max(44,2*labelRadius*Math.tan(slice/2)*.94);
+  const label=String(level.name||"Level");
+  let fontSize=Math.max(15,Math.min(32,maxWidth/Math.max(4,label.length)*2.05));
+  while(fontSize>15){ctx.font="900 "+fontSize+"px system-ui";if(ctx.measureText(label).width<=maxWidth)break;fontSize-=1}
   ctx.font="900 "+fontSize+"px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.lineJoin="round";ctx.lineWidth=Math.max(3,fontSize*.28);ctx.strokeStyle="rgba(0,0,0,.88)";
-  ctx.strokeText(String(level.name||"Level"),labelRadius,0,maxWidth);
-  ctx.fillStyle="#fff";ctx.shadowColor="#000";ctx.shadowBlur=5;ctx.fillText(String(level.name||"Level"),labelRadius,0,maxWidth);
+  ctx.lineJoin="round";ctx.lineWidth=Math.max(4,fontSize*.32);ctx.strokeStyle="rgba(0,0,0,.96)";
+  ctx.strokeText(label,labelRadius,0,maxWidth);
+  ctx.fillStyle="#fff";ctx.shadowColor="#000";ctx.shadowBlur=7;ctx.fillText(label,labelRadius,0,maxWidth);
   ctx.restore();
   ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r-2,start,end);ctx.closePath();ctx.strokeStyle="#090b10";ctx.lineWidth=3;ctx.stroke();
  });
